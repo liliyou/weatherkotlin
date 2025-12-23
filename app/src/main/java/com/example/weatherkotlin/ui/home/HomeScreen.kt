@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -33,8 +34,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.weatherkotlin.data.model.CityWeather
-import com.example.weatherkotlin.data.model.PreviewData
+import com.example.weatherkotlin.domain.model.CityWeather
+import com.example.weatherkotlin.domain.model.PreviewData
 import com.example.weatherkotlin.ui.components.WeatherCard
 import com.example.weatherkotlin.ui.components.WeatherCardSkeleton
 import com.example.weatherkotlin.ui.theme.WeatherBackground
@@ -122,20 +123,26 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // 下拉更新或初始載入時顯示 skeleton
+                // 下拉刷新或初始載入時顯示 skeleton
                 if (uiState.isRefreshing || (uiState.isLoading && uiState.cityWeatherList.isEmpty())) {
                     val skeletonCount = maxOf(uiState.cityWeatherList.size, 1)
                     items(skeletonCount, key = { "skeleton_$it" }) {
                         WeatherCardSkeleton()
                     }
                 } else {
+                    // 城市列表（帶動畫）
                     items(
                         items = uiState.cityWeatherList,
                         key = { it.id }
                     ) { cityWeather ->
                         WeatherCard(
                             cityWeather = cityWeather,
-                            onClick = { onCityClick(cityWeather) }
+                            onClick = { onCityClick(cityWeather) },
+                            modifier = Modifier.animateItem(
+                                fadeInSpec = tween(300),
+                                fadeOutSpec = tween(300),
+                                placementSpec = tween(300)
+                            )
                         )
                     }
                 }

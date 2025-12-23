@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -25,15 +24,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import com.example.weatherkotlin.data.model.HourlyWeather
-import com.example.weatherkotlin.data.remote.WeatherApi
-import com.example.weatherkotlin.data.model.PreviewData
+import com.example.weatherkotlin.domain.model.HourlyWeather
+import com.example.weatherkotlin.domain.model.PreviewData
 import com.example.weatherkotlin.ui.theme.WeatherCardBackground
 import com.example.weatherkotlin.ui.theme.WeatherTextPrimary
-import com.example.weatherkotlin.ui.theme.weatherCardStyle
 import com.example.weatherkotlin.ui.theme.WeatherTextSecondary
 import com.example.weatherkotlin.ui.theme.WeatherkotlinTheme
+import com.example.weatherkotlin.ui.theme.weatherCardStyle
 
 @Composable
 fun HourlyWeatherRow(
@@ -42,7 +39,6 @@ fun HourlyWeatherRow(
 ) {
     val listState = rememberLazyListState()
 
-    // 檢查是否還可以向右滾動
     val canScrollRight by remember {
         derivedStateOf {
             listState.canScrollForward
@@ -56,7 +52,6 @@ fun HourlyWeatherRow(
             .weatherCardStyle()
             .padding(vertical = 16.dp)
     ) {
-        // 標題列
         Text(
             text = "今日天氣",
             color = WeatherTextPrimary,
@@ -65,7 +60,6 @@ fun HourlyWeatherRow(
             modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
         )
 
-        // 帶漸層淡出效果的 LazyRow
         Box {
             LazyRow(
                 state = listState,
@@ -75,7 +69,6 @@ fun HourlyWeatherRow(
                 modifier = Modifier
                     .drawWithContent {
                         drawContent()
-                        // 右側漸層遮罩（僅在可滾動時顯示）
                         if (canScrollRight) {
                             drawRect(
                                 brush = Brush.horizontalGradient(
@@ -117,10 +110,10 @@ private fun HourlyWeatherItem(
             fontSize = 12.sp,
             fontWeight = if (isNow) FontWeight.Bold else FontWeight.Normal
         )
-        AsyncImage(
-            model = WeatherApi.getIconUrl(hourlyWeather.weatherIcon),
+        WeatherAnimatedIcon(
+            weatherIcon = hourlyWeather.weatherIcon,
             contentDescription = hourlyWeather.weatherDescription,
-            modifier = Modifier.size(44.dp)
+            size = 44.dp
         )
         Text(
             text = "${hourlyWeather.temp}°",

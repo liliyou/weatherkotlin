@@ -2,15 +2,17 @@ package com.example.weatherkotlin.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherkotlin.data.location.LocationService
-import com.example.weatherkotlin.data.model.CityWeather
-import com.example.weatherkotlin.data.repository.WeatherRepository
+import com.example.weatherkotlin.domain.model.CityWeather
+import com.example.weatherkotlin.domain.repository.LocationRepository
+import com.example.weatherkotlin.domain.usecase.AddCurrentLocationCityUseCase
+import com.example.weatherkotlin.domain.usecase.GetAllCityWeatherUseCase
+import com.example.weatherkotlin.domain.usecase.InitializeDefaultCityUseCase
+import com.example.weatherkotlin.domain.usecase.RefreshAllWeatherUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,8 +27,11 @@ data class HomeUiState(
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: WeatherRepository,
-    private val locationService: LocationService
+    private val getAllCityWeatherUseCase: GetAllCityWeatherUseCase,
+    private val refreshAllWeatherUseCase: RefreshAllWeatherUseCase,
+    private val addCurrentLocationCityUseCase: AddCurrentLocationCityUseCase,
+    private val initializeDefaultCityUseCase: InitializeDefaultCityUseCase,
+    private val locationRepository: LocationRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -39,17 +44,15 @@ class HomeViewModel @Inject constructor(
 
     private fun loadInitialWeather() {
         viewModelScope.launch {
-            val hasPermission = locationService.hasLocationPermission()
+            val hasPermission = locationRepository.hasLocationPermission()
             _uiState.value = _uiState.value.copy(
                 hasLocationPermission = hasPermission,
                 locationPermissionRequested = hasPermission
             )
 
             if (hasPermission) {
-                // 有位置權限：加入當前位置城市（如果不存在）
                 addCurrentLocationCity()
             } else {
-                // 無位置權限：初始化預設城市（台北）
                 initializeDefaultCityIfEmpty()
             }
 
@@ -59,19 +62,10 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun initializeDefaultCityIfEmpty() {
         try {
-            val cities = repository.getAllCityWeather().first()
-            if (cities.isEmpty()) {
-                repository.fetchAndSaveWeather(DEFAULT_LAT, DEFAULT_LON, DEFAULT_CITY)
-            }
+            initializeDefaultCityUseCase()
         } catch (_: Exception) {
             // 忽略初始化錯誤
         }
-    }
-
-    companion object {
-        private const val DEFAULT_LAT = 25.0330
-        private const val DEFAULT_LON = 121.5654
-        private const val DEFAULT_CITY = "台北市"
     }
 
     fun onPermissionResult(granted: Boolean) {
@@ -84,7 +78,6 @@ class HomeViewModel @Inject constructor(
                 addCurrentLocationCity()
             }
         } else {
-            // 無權限時初始化預設城市
             viewModelScope.launch {
                 initializeDefaultCityIfEmpty()
             }
@@ -93,10 +86,7 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun addCurrentLocationCity() {
         try {
-            val location = locationService.getCurrentLocation()
-            if (location != null) {
-                repository.addCityIfNotExists(location.lat, location.lon)
-            }
+            addCurrentLocationCityUseCase()
         } catch (e: Exception) {
             _uiState.value = _uiState.value.copy(error = e.message)
         }
@@ -104,7 +94,7 @@ class HomeViewModel @Inject constructor(
 
     private fun observeCityWeather() {
         viewModelScope.launch {
-            repository.getAllCityWeather()
+            getAllCityWeatherUseCase()
                 .catch { e ->
                     _uiState.value = _uiState.value.copy(error = e.message)
                 }
@@ -120,7 +110,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isRefreshing = true)
             try {
-                repository.refreshAllWeather()
+                refreshAllWeatherUseCase()
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(error = e.message)
             } finally {

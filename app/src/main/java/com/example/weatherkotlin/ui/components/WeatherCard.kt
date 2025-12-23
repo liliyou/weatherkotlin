@@ -33,14 +33,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import com.example.weatherkotlin.data.model.CityWeather
-import com.example.weatherkotlin.data.remote.WeatherApi
-import com.example.weatherkotlin.data.model.PreviewData
+import com.example.weatherkotlin.domain.model.CityWeather
+import com.example.weatherkotlin.domain.model.PreviewData
 import com.example.weatherkotlin.ui.theme.WeatherTextPrimary
-import com.example.weatherkotlin.ui.theme.weatherCardStyle
 import com.example.weatherkotlin.ui.theme.WeatherTextSecondary
 import com.example.weatherkotlin.ui.theme.WeatherkotlinTheme
+import com.example.weatherkotlin.ui.theme.weatherCardStyle
 
 private val ICON_SIZE = 110.dp
 private val CARD_TOP_PADDING = 50.dp
@@ -71,11 +69,10 @@ fun WeatherCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom
             ) {
-                // 左側：城市資訊（限制最大寬度，允許換行）
+                // 左側：城市資訊
                 Column(
                     modifier = Modifier.widthIn(max = 180.dp)
                 ) {
-                    // 為圖示預留空間（圖示會覆蓋這個區域）
                     Spacer(modifier = Modifier.height(ICON_SIZE - CARD_TOP_PADDING))
                     Text(
                         text = if (cityWeather.country.isNotEmpty()) {
@@ -121,11 +118,11 @@ fun WeatherCard(
             }
         }
 
-        // 懸浮的天氣圖示（自然放在左上角，不用 offset）
-        AsyncImage(
-            model = WeatherApi.getLargeIconUrl(cityWeather.weatherIcon),
+        // 懸浮的天氣動畫圖示
+        WeatherAnimatedIcon(
+            weatherIcon = cityWeather.weatherIcon,
             contentDescription = cityWeather.weatherDescription,
-            modifier = Modifier.size(ICON_SIZE)
+            size = ICON_SIZE
         )
     }
 }
@@ -171,7 +168,6 @@ fun WeatherCardSkeleton(
             .fillMaxWidth()
             .widthIn(max = 600.dp)
     ) {
-        // 卡片背景（與 WeatherCard 一致）
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -185,12 +181,10 @@ fun WeatherCardSkeleton(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom
             ) {
-                // 左側骨架
                 Column(
                     modifier = Modifier.widthIn(max = 180.dp)
                 ) {
                     Spacer(modifier = Modifier.height(ICON_SIZE - CARD_TOP_PADDING))
-                    // 城市名稱佔位
                     Box(
                         modifier = Modifier
                             .width(100.dp)
@@ -199,7 +193,6 @@ fun WeatherCardSkeleton(
                             .background(shimmerBrush)
                     )
                     Spacer(modifier = Modifier.height(6.dp))
-                    // 天氣描述佔位
                     Box(
                         modifier = Modifier
                             .width(60.dp)
@@ -209,11 +202,9 @@ fun WeatherCardSkeleton(
                     )
                 }
 
-                // 右側骨架
                 Column(
                     horizontalAlignment = Alignment.End
                 ) {
-                    // 溫度佔位
                     Box(
                         modifier = Modifier
                             .width(70.dp)
@@ -222,7 +213,6 @@ fun WeatherCardSkeleton(
                             .background(shimmerBrush)
                     )
                     Spacer(modifier = Modifier.height(6.dp))
-                    // 最高溫佔位
                     Box(
                         modifier = Modifier
                             .width(60.dp)
@@ -231,7 +221,6 @@ fun WeatherCardSkeleton(
                             .background(shimmerBrush)
                     )
                     Spacer(modifier = Modifier.height(4.dp))
-                    // 最低溫佔位
                     Box(
                         modifier = Modifier
                             .width(60.dp)
@@ -243,7 +232,6 @@ fun WeatherCardSkeleton(
             }
         }
 
-        // 懸浮圖示佔位（自然放在左上角，不用 offset）
         Box(
             modifier = Modifier
                 .size(ICON_SIZE)

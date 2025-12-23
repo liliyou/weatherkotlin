@@ -24,13 +24,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import com.example.weatherkotlin.data.model.DailyWeather
-import com.example.weatherkotlin.data.model.HourlyWeather
-import com.example.weatherkotlin.data.remote.WeatherApi
-import com.example.weatherkotlin.data.model.PreviewData
+import com.example.weatherkotlin.domain.model.DailyWeather
+import com.example.weatherkotlin.domain.model.HourlyWeather
+import com.example.weatherkotlin.domain.model.PreviewData
 import com.example.weatherkotlin.ui.components.DailyWeatherColumn
 import com.example.weatherkotlin.ui.components.HourlyWeatherRow
+import com.example.weatherkotlin.ui.components.WeatherAnimatedIcon
 import com.example.weatherkotlin.ui.theme.WeatherBackground
 import com.example.weatherkotlin.ui.theme.WeatherTextPrimary
 import com.example.weatherkotlin.ui.theme.WeatherkotlinTheme
@@ -91,11 +90,11 @@ fun DetailScreen(
                 .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // 今日天氣 icon
-            AsyncImage(
-                model = WeatherApi.getLargeIconUrl(currentWeatherIcon),
+            // 今日天氣動畫圖示
+            WeatherAnimatedIcon(
+                weatherIcon = currentWeatherIcon,
                 contentDescription = "今日天氣",
-                modifier = Modifier.size(150.dp)
+                size = 150.dp
             )
 
             // 地點

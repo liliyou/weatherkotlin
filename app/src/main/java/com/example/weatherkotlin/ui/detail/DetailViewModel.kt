@@ -2,9 +2,10 @@ package com.example.weatherkotlin.ui.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherkotlin.data.model.DailyWeather
-import com.example.weatherkotlin.data.model.HourlyWeather
-import com.example.weatherkotlin.data.repository.WeatherRepository
+import com.example.weatherkotlin.domain.model.DailyWeather
+import com.example.weatherkotlin.domain.model.HourlyWeather
+import com.example.weatherkotlin.domain.usecase.DeleteCityWeatherUseCase
+import com.example.weatherkotlin.domain.usecase.GetForecastUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +25,8 @@ data class DetailUiState(
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val repository: WeatherRepository
+    private val getForecastUseCase: GetForecastUseCase,
+    private val deleteCityWeatherUseCase: DeleteCityWeatherUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DetailUiState())
@@ -46,7 +48,7 @@ class DetailViewModel @Inject constructor(
                 canDelete = cityId > 0
             )
             try {
-                val forecast = repository.getForecast(lat = lat, lon = lon)
+                val forecast = getForecastUseCase(lat = lat, lon = lon)
                 _uiState.value = _uiState.value.copy(
                     hourlyWeather = forecast.hourlyWeather,
                     dailyWeather = forecast.dailyWeather,
@@ -66,7 +68,7 @@ class DetailViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                repository.deleteCityWeather(currentCityId)
+                deleteCityWeatherUseCase(currentCityId)
                 _uiState.value = _uiState.value.copy(isDeleted = true)
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(error = e.message)

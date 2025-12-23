@@ -5,24 +5,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import com.example.weatherkotlin.data.model.DailyWeather
-import com.example.weatherkotlin.data.remote.WeatherApi
-import com.example.weatherkotlin.data.model.PreviewData
+import com.example.weatherkotlin.domain.model.DailyWeather
+import com.example.weatherkotlin.domain.model.PreviewData
 import com.example.weatherkotlin.ui.theme.WeatherTextPrimary
-import com.example.weatherkotlin.ui.theme.weatherCardStyle
 import com.example.weatherkotlin.ui.theme.WeatherTextSecondary
 import com.example.weatherkotlin.ui.theme.WeatherkotlinTheme
+import com.example.weatherkotlin.ui.theme.weatherCardStyle
 
 @Composable
 fun DailyWeatherColumn(
@@ -66,45 +64,40 @@ private fun DailyWeatherItem(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Icon
-        AsyncImage(
-            model = WeatherApi.getIconUrl(dailyWeather.weatherIcon),
+        WeatherAnimatedIcon(
+            weatherIcon = dailyWeather.weatherIcon,
             contentDescription = dailyWeather.weatherDescription,
-            modifier = Modifier.size(36.dp)
+            size = 36.dp
         )
-        // 星期
         Text(
             text = dailyWeather.dayOfWeek,
             color = if (isToday) WeatherTextPrimary else WeatherTextSecondary,
             fontSize = 14.sp,
             fontWeight = if (isToday) FontWeight.Bold else FontWeight.Normal,
             modifier = Modifier.weight(1f),
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            textAlign = TextAlign.Center
         )
-        // 天氣描述
         Text(
             text = dailyWeather.weatherDescription,
             color = WeatherTextSecondary,
             fontSize = 13.sp,
             modifier = Modifier.weight(1f),
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            textAlign = TextAlign.Center
         )
-        // 最低溫
         Text(
             text = "${dailyWeather.lowTemp}°",
             color = WeatherTextSecondary,
             fontSize = 14.sp,
             modifier = Modifier.weight(0.5f),
-            textAlign = androidx.compose.ui.text.style.TextAlign.End
+            textAlign = TextAlign.End
         )
-        // 最高溫
         Text(
             text = "${dailyWeather.highTemp}°",
             color = WeatherTextPrimary,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.weight(0.5f),
-            textAlign = androidx.compose.ui.text.style.TextAlign.End
+            textAlign = TextAlign.End
         )
     }
 }
