@@ -110,6 +110,13 @@ fun WeatherNavigation(
                 }
             }
 
+            LaunchedEffect(uiState.alreadyExists) {
+                if (uiState.alreadyExists) {
+                    viewModel.resetAlreadyExistsState()
+                    navController.popBackStack()
+                }
+            }
+
             SearchScreen(
                 query = uiState.query,
                 onQueryChange = viewModel::onQueryChange,

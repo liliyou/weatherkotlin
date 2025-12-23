@@ -43,6 +43,10 @@ class WeatherRepositoryImpl @Inject constructor(
         return entity.copy(id = id).toDomainModel()
     }
 
+    override suspend fun isCityExists(cityName: String): Boolean {
+        return cityWeatherDao.getCityByName(cityName) != null
+    }
+
     override suspend fun addCityIfNotExists(lat: Double, lon: Double): Boolean {
         val response = weatherApi.getWeather(lat = lat, lon = lon, apiKey = apiKey)
         val cityName = response.name
@@ -54,23 +58,6 @@ class WeatherRepositoryImpl @Inject constructor(
         } else {
             false
         }
-    }
-
-    override suspend fun fetchWeatherOnly(lat: Double, lon: Double, cityName: String?): CityWeather {
-        val response = weatherApi.getWeather(lat = lat, lon = lon, apiKey = apiKey)
-        val weatherInfo = response.weather.firstOrNull()
-        return CityWeather(
-            id = -1,
-            cityName = cityName ?: response.name,
-            country = response.sys.country,
-            weatherDescription = weatherInfo?.description ?: "",
-            weatherIcon = weatherInfo?.icon ?: "01d",
-            currentTemp = response.main.temp.roundToInt(),
-            highTemp = response.main.tempMax.roundToInt(),
-            lowTemp = response.main.tempMin.roundToInt(),
-            lat = response.coord.lat,
-            lon = response.coord.lon
-        )
     }
 
     override suspend fun refreshWeather(cityWeather: CityWeather): CityWeather {

@@ -81,17 +81,23 @@ class SearchViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
                 val cityName = searchResult.cityName.split(",").first().trim()
-                addCityUseCase(
+                val added = addCityUseCase(
                     lat = searchResult.lat,
                     lon = searchResult.lon,
                     cityName = cityName
                 )
-                loadSuggestedCities()
-
-                _uiState.value = _uiState.value.copy(
-                    isAdded = true,
-                    isLoading = false
-                )
+                if (added) {
+                    loadSuggestedCities()
+                    _uiState.value = _uiState.value.copy(
+                        isAdded = true,
+                        isLoading = false
+                    )
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        alreadyExists = true,
+                        isLoading = false
+                    )
+                }
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     error = e.message,
@@ -114,5 +120,9 @@ class SearchViewModel @Inject constructor(
 
     fun resetAddedState() {
         _uiState.value = _uiState.value.copy(isAdded = false)
+    }
+
+    fun resetAlreadyExistsState() {
+        _uiState.value = _uiState.value.copy(alreadyExists = false)
     }
 }

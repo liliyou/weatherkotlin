@@ -33,8 +33,12 @@ class SearchRepositoryImpl @Inject constructor(
         }.distinctBy { "${it.lat},${it.lon}" }
     }
 
-    override suspend fun addCity(lat: Double, lon: Double, cityName: String) {
+    override suspend fun addCity(lat: Double, lon: Double, cityName: String): Boolean {
+        if (weatherRepository.isCityExists(cityName)) {
+            return false
+        }
         weatherRepository.fetchAndSaveWeather(lat, lon, cityName)
+        return true
     }
 
     override suspend fun getSuggestedCities(): List<String> {

@@ -14,8 +14,9 @@ interface SearchRepository {
 
     /**
      * 新增城市到收藏
+     * @return true 如果成功新增，false 如果城市已存在
      */
-    suspend fun addCity(lat: Double, lon: Double, cityName: String)
+    suspend fun addCity(lat: Double, lon: Double, cityName: String): Boolean
 
     /**
      * 取得建議城市列表

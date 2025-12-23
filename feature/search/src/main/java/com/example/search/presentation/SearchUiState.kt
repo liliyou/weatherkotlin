@@ -11,5 +11,6 @@ data class SearchUiState(
     val suggestedCities: List<String> = emptyList(),
     val isLoading: Boolean = false,
     val isAdded: Boolean = false,
+    val alreadyExists: Boolean = false,
     val error: String? = null
 )
