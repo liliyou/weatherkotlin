@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -24,6 +25,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import com.example.weatherkotlin.data.remote.WeatherApi
 import com.example.weatherkotlin.domain.model.HourlyWeather
 import com.example.weatherkotlin.domain.model.PreviewData
 import com.example.weatherkotlin.ui.theme.WeatherCardBackground
@@ -110,10 +113,10 @@ private fun HourlyWeatherItem(
             fontSize = 12.sp,
             fontWeight = if (isNow) FontWeight.Bold else FontWeight.Normal
         )
-        WeatherAnimatedIcon(
-            weatherIcon = hourlyWeather.weatherIcon,
+        AsyncImage(
+            model = WeatherApi.getIconUrl(hourlyWeather.weatherIcon),
             contentDescription = hourlyWeather.weatherDescription,
-            size = 44.dp
+            modifier = Modifier.size(44.dp)
         )
         Text(
             text = "${hourlyWeather.temp}°",

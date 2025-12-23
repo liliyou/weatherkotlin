@@ -27,9 +27,10 @@ import androidx.compose.ui.unit.sp
 import com.example.weatherkotlin.domain.model.DailyWeather
 import com.example.weatherkotlin.domain.model.HourlyWeather
 import com.example.weatherkotlin.domain.model.PreviewData
+import coil.compose.AsyncImage
+import com.example.weatherkotlin.data.remote.WeatherApi
 import com.example.weatherkotlin.ui.components.DailyWeatherColumn
 import com.example.weatherkotlin.ui.components.HourlyWeatherRow
-import com.example.weatherkotlin.ui.components.WeatherAnimatedIcon
 import com.example.weatherkotlin.ui.theme.WeatherBackground
 import com.example.weatherkotlin.ui.theme.WeatherTextPrimary
 import com.example.weatherkotlin.ui.theme.WeatherkotlinTheme
@@ -90,11 +91,11 @@ fun DetailScreen(
                 .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // 今日天氣動畫圖示
-            WeatherAnimatedIcon(
-                weatherIcon = currentWeatherIcon,
+            // 今日天氣圖示
+            AsyncImage(
+                model = WeatherApi.getLargeIconUrl(currentWeatherIcon),
                 contentDescription = "今日天氣",
-                size = 150.dp
+                modifier = Modifier.size(150.dp)
             )
 
             // 地點
