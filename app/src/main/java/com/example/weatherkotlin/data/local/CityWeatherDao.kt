@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CityWeatherDao {
 
-    @Query("SELECT * FROM city_weather ORDER BY id ASC")
+    @Query("SELECT * FROM city_weather ORDER BY id DESC")
     fun getAllCityWeather(): Flow<List<CityWeatherEntity>>
 
     @Query("SELECT * FROM city_weather WHERE id = :id")
