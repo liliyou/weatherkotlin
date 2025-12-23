@@ -7,7 +7,7 @@ import com.example.weatherkotlin.BuildConfig
 import com.example.weatherkotlin.data.local.CityWeatherDao
 import com.example.weatherkotlin.data.local.SearchHistoryDao
 import com.example.weatherkotlin.data.local.WeatherDatabase
-import com.example.weatherkotlin.data.location.LocationRepositoryImpl
+import com.example.weatherkotlin.data.repository.LocationRepositoryImpl
 import com.example.weatherkotlin.data.remote.WeatherApi
 import com.example.weatherkotlin.data.repository.SearchRepositoryImpl
 import com.example.weatherkotlin.data.repository.WeatherRepositoryImpl

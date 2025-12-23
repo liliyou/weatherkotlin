@@ -1,4 +1,4 @@
-package com.example.weatherkotlin.data.location
+package com.example.weatherkotlin.data.repository
 
 import android.Manifest
 import android.content.Context
