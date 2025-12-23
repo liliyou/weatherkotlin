@@ -179,7 +179,7 @@ private fun HomeScreenPreview() {
     WeatherkotlinTheme {
         HomeScreenContent(
             uiState = HomeUiState(
-                cityWeatherList = listOf(PreviewData.sampleCityWeather) + PreviewData.sampleCityWeatherList,
+                cityWeatherList = PreviewData.sampleCityWeatherList,
                 isLoading = false,
                 hasLocationPermission = true,
                 locationPermissionRequested = true
