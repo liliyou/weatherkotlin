@@ -115,7 +115,7 @@ class WeatherRepositoryImpl @Inject constructor(
             dailyMap.getOrPut(dateKey) { mutableListOf() }.add(item)
         }
 
-        val dailyWeather = dailyMap.entries.take(7).mapIndexed { index, entry ->
+        val dailyWeather = dailyMap.entries.take(5).mapIndexed { index, entry ->
             val items = entry.value
             val highTemp = items.maxOfOrNull { it.main.tempMax.roundToInt() } ?: 0
             val lowTemp = items.minOfOrNull { it.main.tempMin.roundToInt() } ?: 0

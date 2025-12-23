@@ -116,7 +116,7 @@ fun DetailScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 7 日天氣
+            // 5 日天氣
             DailyWeatherColumn(
                 dailyWeatherList = dailyWeather,
                 modifier = Modifier.fillMaxWidth()

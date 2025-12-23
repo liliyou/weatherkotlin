@@ -39,7 +39,7 @@ fun DailyWeatherColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "7 日天氣",
+            text = "5 日天氣",
             color = WeatherTextPrimary,
             fontSize = 15.sp,
             fontWeight = FontWeight.SemiBold,

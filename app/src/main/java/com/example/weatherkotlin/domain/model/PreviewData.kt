@@ -49,8 +49,6 @@ object PreviewData {
         DailyWeather("週一", 28, 20, "02d", "多雲"),
         DailyWeather("週二", 26, 19, "10d", "小雨"),
         DailyWeather("週三", 25, 18, "10d", "小雨"),
-        DailyWeather("週四", 27, 19, "02d", "多雲"),
-        DailyWeather("週五", 29, 21, "01d", "晴"),
-        DailyWeather("週六", 30, 22, "01d", "晴")
+        DailyWeather("週四", 27, 19, "02d", "多雲")
     )
 }
