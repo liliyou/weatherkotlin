@@ -13,6 +13,7 @@ import com.example.weatherkotlin.domain.model.ForecastResult
 import com.example.weatherkotlin.domain.model.HourlyWeather
 import com.example.weatherkotlin.domain.repository.WeatherRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -80,21 +81,17 @@ class WeatherRepositoryImpl @Inject constructor(
     }
 
     override suspend fun refreshAllWeather(): List<CityWeather> {
-        val cities = cityWeatherDao.getAllCityWeather()
-        val result = mutableListOf<CityWeather>()
-        cities.collect { entities ->
-            entities.forEach { entity ->
-                try {
-                    val response = weatherApi.getWeather(lat = entity.lat, lon = entity.lon, apiKey = apiKey)
-                    val updatedEntity = response.toEntity(entity.cityName).copy(id = entity.id)
-                    cityWeatherDao.updateCityWeather(updatedEntity)
-                    result.add(updatedEntity.toDomainModel())
-                } catch (e: Exception) {
-                    result.add(entity.toDomainModel())
-                }
+        val entities = cityWeatherDao.getAllCityWeather().first()
+        return entities.map { entity ->
+            try {
+                val response = weatherApi.getWeather(lat = entity.lat, lon = entity.lon, apiKey = apiKey)
+                val updatedEntity = response.toEntity(entity.cityName).copy(id = entity.id)
+                cityWeatherDao.updateCityWeather(updatedEntity)
+                updatedEntity.toDomainModel()
+            } catch (e: Exception) {
+                entity.toDomainModel()
             }
         }
-        return result
     }
 
     override suspend fun deleteCityWeather(id: Long) {
