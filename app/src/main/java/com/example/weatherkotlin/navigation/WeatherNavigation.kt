@@ -11,12 +11,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.search.presentation.SearchScreen
+import com.example.search.presentation.SearchViewModel
 import com.example.weatherkotlin.ui.detail.DetailScreen
 import com.example.weatherkotlin.ui.detail.DetailViewModel
 import com.example.weatherkotlin.ui.home.HomeScreen
 import com.example.weatherkotlin.ui.home.HomeViewModel
-import com.example.weatherkotlin.ui.search.SearchScreen
-import com.example.weatherkotlin.ui.search.SearchViewModel
 
 sealed class Screen(val route: String) {
     data object Home : Screen("home")

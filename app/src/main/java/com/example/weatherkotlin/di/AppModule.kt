@@ -2,14 +2,20 @@ package com.example.weatherkotlin.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.search.domain.repository.SearchRepository
 import com.example.weatherkotlin.BuildConfig
 import com.example.weatherkotlin.data.local.CityWeatherDao
 import com.example.weatherkotlin.data.local.SearchHistoryDao
 import com.example.weatherkotlin.data.local.WeatherDatabase
+import com.example.weatherkotlin.data.location.LocationRepositoryImpl
 import com.example.weatherkotlin.data.remote.WeatherApi
-import com.example.weatherkotlin.data.repository.WeatherRepository
+import com.example.weatherkotlin.data.repository.SearchRepositoryImpl
+import com.example.weatherkotlin.data.repository.WeatherRepositoryImpl
+import com.example.weatherkotlin.domain.repository.LocationRepository
+import com.example.weatherkotlin.domain.repository.WeatherRepository
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,6 +26,22 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
+    @Binds
+    @Singleton
+    abstract fun bindSearchRepository(impl: SearchRepositoryImpl): SearchRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindWeatherRepository(impl: WeatherRepositoryImpl): WeatherRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindLocationRepository(impl: LocationRepositoryImpl): LocationRepository
+}
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -86,15 +108,5 @@ object AppModule {
     @Singleton
     fun provideApiKey(): String {
         return BuildConfig.OPENWEATHER_API_KEY
-    }
-
-    @Provides
-    @Singleton
-    fun provideWeatherRepository(
-        weatherApi: WeatherApi,
-        cityWeatherDao: CityWeatherDao,
-        apiKey: String
-    ): WeatherRepository {
-        return WeatherRepository(weatherApi, cityWeatherDao, apiKey)
     }
 }
