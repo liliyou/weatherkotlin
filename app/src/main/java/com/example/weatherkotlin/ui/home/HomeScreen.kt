@@ -1,9 +1,7 @@
 package com.example.weatherkotlin.ui.home
 
-import android.Manifest
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -26,7 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,16 +33,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherkotlin.domain.model.CityWeather
 import com.example.weatherkotlin.domain.model.PreviewData
+import com.example.weatherkotlin.ui.components.LocationPermissionHandler
 import com.example.weatherkotlin.ui.components.WeatherCard
 import com.example.weatherkotlin.ui.components.WeatherCardSkeleton
 import com.example.weatherkotlin.ui.theme.WeatherBackground
 import com.example.weatherkotlin.ui.theme.WeatherSearchBar
 import com.example.weatherkotlin.ui.theme.WeatherTextPrimary
 import com.example.weatherkotlin.ui.theme.WeatherkotlinTheme
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun HomeScreen(
     uiState: HomeUiState,
@@ -55,29 +50,18 @@ fun HomeScreen(
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val locationPermissionsState = rememberMultiplePermissionsState(
-        permissions = listOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
+    LocationPermissionHandler(
+        shouldRequest = !uiState.locationPermissionRequested,
+        onResult = onPermissionResult
+    ) {
+        HomeScreenContent(
+            uiState = uiState,
+            onSearchClick = onSearchClick,
+            onCityClick = onCityClick,
+            onRefresh = onRefresh,
+            modifier = modifier
         )
-    ) { permissions ->
-        val granted = permissions.values.any { it }
-        onPermissionResult(granted)
     }
-
-    LaunchedEffect(Unit) {
-        if (!uiState.locationPermissionRequested) {
-            locationPermissionsState.launchMultiplePermissionRequest()
-        }
-    }
-
-    HomeScreenContent(
-        uiState = uiState,
-        onSearchClick = onSearchClick,
-        onCityClick = onCityClick,
-        onRefresh = onRefresh,
-        modifier = modifier
-    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
