@@ -1,12 +1,12 @@
 # WeatherKotlin
 
-一個使用 Kotlin + Jetpack Compose 開發的天氣應用程式，採用 MVVM 架構。
+一個使用 Kotlin + Jetpack Compose 開發的天氣應用程式，採用 Clean Architecture + MVVM 架構。
 
 ## 功能
 
 - 自動取得當前位置天氣（需授權定位權限）
 - 預設顯示台北天氣（未授權定位時）
-- 搜尋城市並加入追蹤清單
+- 搜尋城市並加入追蹤清單（自動防止重複新增）
 - 建議城市快速新增（高雄、桃園、台中、新竹）
 - 顯示城市當前天氣（溫度、天氣狀態、最高/最低溫）
 - 查看城市詳細天氣預報（逐時天氣、7日預報）
@@ -17,10 +17,14 @@
 ## 技術架構
 
 ### 架構模式
+
+- **Clean Architecture** - 分離 Domain、Data、Presentation 層
 - **MVVM** (Model-View-ViewModel)
 - **Repository Pattern** - 統一資料來源管理
+- **Use Cases** - 封裝業務邏輯
 
 ### 技術棧
+
 | 類別 | 技術 |
 |------|------|
 | UI | Jetpack Compose + Material 3 |
@@ -34,18 +38,36 @@
 | 權限處理 | Accompanist Permissions |
 
 ### 專案結構
-```
+
+```text
 app/src/main/java/com/example/weatherkotlin/
 ├── WeatherApp.kt                    # Hilt Application
 ├── MainActivity.kt                  # @AndroidEntryPoint
-├── data/
-│   ├── model/                       # UI 資料模型
-│   │   └── WeatherModels.kt
-│   ├── local/                       # Room 本地儲存
+├── domain/                          # Domain Layer
+│   ├── model/                       # Domain Models
+│   │   ├── CityWeather.kt
+│   │   ├── HourlyWeather.kt
+│   │   ├── DailyWeather.kt
+│   │   ├── ForecastResult.kt
+│   │   ├── Location.kt
+│   │   └── PreviewData.kt
+│   ├── repository/                  # Repository Interfaces
+│   │   ├── WeatherRepository.kt
+│   │   └── LocationRepository.kt
+│   └── usecase/                     # Use Cases
+│       ├── GetAllCityWeatherUseCase.kt
+│       ├── RefreshAllWeatherUseCase.kt
+│       ├── GetForecastUseCase.kt
+│       ├── DeleteCityWeatherUseCase.kt
+│       ├── AddCurrentLocationCityUseCase.kt
+│       └── InitializeDefaultCityUseCase.kt
+├── data/                            # Data Layer
+│   ├── local/                       # Room Database
 │   │   ├── CityWeatherEntity.kt
 │   │   ├── CityWeatherDao.kt
 │   │   ├── SearchHistoryEntity.kt
 │   │   ├── SearchHistoryDao.kt
+│   │   ├── SearchHistoryRepository.kt
 │   │   └── WeatherDatabase.kt
 │   ├── remote/                      # Retrofit API
 │   │   ├── WeatherApi.kt
@@ -53,47 +75,77 @@ app/src/main/java/com/example/weatherkotlin/
 │   │       ├── WeatherResponse.kt
 │   │       ├── ForecastResponse.kt
 │   │       └── GeoResponse.kt
-│   ├── location/                    # 定位服務
-│   │   └── LocationService.kt
-│   └── repository/
-│       ├── WeatherRepository.kt
-│       └── SearchHistoryRepository.kt
+│   ├── location/                    # Location Service
+│   │   └── LocationRepositoryImpl.kt
+│   └── repository/                  # Repository Implementations
+│       ├── WeatherRepositoryImpl.kt
+│       └── SearchRepositoryImpl.kt
 ├── di/
 │   └── AppModule.kt                 # Hilt DI Module
 ├── navigation/
 │   └── WeatherNavigation.kt
-└── ui/
-    ├── theme/                       # 主題設定
-    ├── components/                  # 共用 UI 元件
-    │   ├── WeatherCard.kt           # 天氣卡片 + Skeleton
+└── ui/                              # Presentation Layer
+    ├── theme/                       # Theme
+    ├── components/                  # Shared UI Components
+    │   ├── WeatherCard.kt
     │   ├── HourlyWeatherRow.kt
     │   └── DailyWeatherRow.kt
     ├── home/
-    │   ├── HomeScreen.kt            # 下拉更新 + Shimmer
+    │   ├── HomeScreen.kt
     │   └── HomeViewModel.kt
-    ├── detail/
-    │   ├── DetailScreen.kt
-    │   └── DetailViewModel.kt
-    └── search/
-        ├── SearchScreen.kt          # 建議城市標籤
-        └── SearchViewModel.kt
+    └── detail/
+        ├── DetailScreen.kt
+        └── DetailViewModel.kt
+
+feature/search/                      # Search Feature Module
+└── src/main/java/com/example/search/
+    ├── domain/
+    │   ├── model/
+    │   │   └── SearchResult.kt
+    │   ├── repository/
+    │   │   └── SearchRepository.kt
+    │   └── usecase/
+    │       ├── SearchCitiesUseCase.kt
+    │       ├── AddCityUseCase.kt
+    │       └── GetSuggestedCitiesUseCase.kt
+    └── presentation/
+        ├── SearchScreen.kt
+        ├── SearchViewModel.kt
+        ├── SearchUiState.kt
+        ├── component/
+        │   └── SearchBar.kt
+        └── theme/
+            └── SearchTheme.kt
 ```
 
 ## 資料流程
 
-```
-┌─────────────┐     ┌──────────────┐     ┌────────────────┐
-│   UI Layer  │ ──> │  ViewModel   │ ──> │   Repository   │
-│  (Compose)  │ <── │  (StateFlow) │ <── │                │
-└─────────────┘     └──────────────┘     └───────┬────────┘
-                                                 │
-                    ┌────────────┬───────────────┼───────────────┬────────────┐
-                    │            │               │               │            │
-                    v            v               v               v            v
-             ┌───────────┐ ┌───────────┐ ┌─────────────┐ ┌───────────┐ ┌─────────────┐
-             │ WeatherApi│ │ Geocoding │ │   Room DB   │ │ Location  │ │  Search     │
-             │ (當前天氣) │ │ (城市搜尋) │ │ (城市快取)  │ │ Service   │ │  History    │
-             └───────────┘ └───────────┘ └─────────────┘ └───────────┘ └─────────────┘
+```text
+┌─────────────────────────────────────────────────────────────────┐
+│                      Presentation Layer                          │
+│  ┌─────────────┐     ┌──────────────┐     ┌─────────────────┐   │
+│  │   UI Layer  │ ──> │  ViewModel   │ ──> │    Use Cases    │   │
+│  │  (Compose)  │ <── │  (StateFlow) │ <── │                 │   │
+│  └─────────────┘     └──────────────┘     └────────┬────────┘   │
+└────────────────────────────────────────────────────┼────────────┘
+                                                     │
+┌────────────────────────────────────────────────────┼────────────┐
+│                       Domain Layer                  │            │
+│                    ┌────────────────────────────────┴───┐        │
+│                    │        Repository Interfaces       │        │
+│                    └────────────────────────────────────┘        │
+└────────────────────────────────────────────────────┬────────────┘
+                                                     │
+┌────────────────────────────────────────────────────┼────────────┐
+│                        Data Layer                   │            │
+│    ┌────────────┬───────────────────────────────────┼────────────┤
+│    │            │               │               │   │            │
+│    v            v               v               v   v            │
+│ ┌───────────┐ ┌───────────┐ ┌─────────────┐ ┌───────────┐        │
+│ │ WeatherApi│ │ Geocoding │ │   Room DB   │ │ Location  │        │
+│ │ (天氣API) │ │ (城市搜尋) │ │ (本地快取)  │ │ Service   │        │
+│ └───────────┘ └───────────┘ └─────────────┘ └───────────┘        │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ## API 端點
@@ -111,11 +163,14 @@ app/src/main/java/com/example/weatherkotlin/
 ## 安裝/設定
 
 1. Clone 專案並在 Android Studio 開啟
-2. 在專案根目錄的 `local.properties` 加入 API Key：
-   ```
+1. 在專案根目錄的 `local.properties` 加入 API Key：
+
+   ```text
    OPENWEATHER_API_KEY=your_api_key_here
    ```
-3. Build & Run：
+
+1. Build & Run：
+
    ```bash
    ./gradlew assembleDebug
    ```
