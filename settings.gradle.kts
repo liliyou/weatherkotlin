@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "weatherkotlin"
 include(":app")
+include(":feature:search")
  
