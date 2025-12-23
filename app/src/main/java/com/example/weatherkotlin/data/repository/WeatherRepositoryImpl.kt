@@ -2,14 +2,16 @@ package com.example.weatherkotlin.data.repository
 
 import com.example.weatherkotlin.data.local.CityWeatherDao
 import com.example.weatherkotlin.data.local.CityWeatherEntity
-import com.example.weatherkotlin.data.local.toCityWeather
-import com.example.weatherkotlin.data.model.CityWeather
+import com.example.weatherkotlin.data.local.toDomainModel
 import com.example.weatherkotlin.data.remote.WeatherApi
-import com.example.weatherkotlin.data.model.DailyWeather
-import com.example.weatherkotlin.data.model.HourlyWeather
 import com.example.weatherkotlin.data.remote.dto.ForecastResponse
 import com.example.weatherkotlin.data.remote.dto.GeoResponse
 import com.example.weatherkotlin.data.remote.dto.WeatherResponse
+import com.example.weatherkotlin.domain.model.CityWeather
+import com.example.weatherkotlin.domain.model.DailyWeather
+import com.example.weatherkotlin.domain.model.ForecastResult
+import com.example.weatherkotlin.domain.model.HourlyWeather
+import com.example.weatherkotlin.domain.repository.WeatherRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.text.SimpleDateFormat
@@ -20,40 +22,27 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
 
-data class ForecastResult(
-    val hourlyWeather: List<HourlyWeather>,
-    val dailyWeather: List<DailyWeather>
-)
-
 @Singleton
-class WeatherRepository @Inject constructor(
+class WeatherRepositoryImpl @Inject constructor(
     private val weatherApi: WeatherApi,
     private val cityWeatherDao: CityWeatherDao,
     private val apiKey: String
-) {
+) : WeatherRepository {
 
-    fun getAllCityWeather(): Flow<List<CityWeather>> {
+    override fun getAllCityWeather(): Flow<List<CityWeather>> {
         return cityWeatherDao.getAllCityWeather().map { entities ->
-            entities.map { it.toCityWeather() }
+            entities.map { it.toDomainModel() }
         }
     }
 
-    suspend fun fetchAndSaveWeather(lat: Double, lon: Double, cityName: String? = null): CityWeather {
-        val response = weatherApi.getWeather(
-            lat = lat,
-            lon = lon,
-            apiKey = apiKey
-        )
+    override suspend fun fetchAndSaveWeather(lat: Double, lon: Double, cityName: String?): CityWeather {
+        val response = weatherApi.getWeather(lat = lat, lon = lon, apiKey = apiKey)
         val entity = response.toEntity(cityName)
         val id = cityWeatherDao.insertCityWeather(entity)
-        return entity.copy(id = id).toCityWeather()
+        return entity.copy(id = id).toDomainModel()
     }
 
-    /**
-     * 檢查城市是否存在，不存在則新增
-     * @return true 如果新增了城市，false 如果已存在
-     */
-    suspend fun addCityIfNotExists(lat: Double, lon: Double): Boolean {
+    override suspend fun addCityIfNotExists(lat: Double, lon: Double): Boolean {
         val response = weatherApi.getWeather(lat = lat, lon = lon, apiKey = apiKey)
         val cityName = response.name
         val existing = cityWeatherDao.getCityByName(cityName)
@@ -66,12 +55,8 @@ class WeatherRepository @Inject constructor(
         }
     }
 
-    suspend fun fetchWeatherOnly(lat: Double, lon: Double, cityName: String? = null): CityWeather {
-        val response = weatherApi.getWeather(
-            lat = lat,
-            lon = lon,
-            apiKey = apiKey
-        )
+    override suspend fun fetchWeatherOnly(lat: Double, lon: Double, cityName: String?): CityWeather {
+        val response = weatherApi.getWeather(lat = lat, lon = lon, apiKey = apiKey)
         val weatherInfo = response.weather.firstOrNull()
         return CityWeather(
             id = -1,
@@ -87,54 +72,45 @@ class WeatherRepository @Inject constructor(
         )
     }
 
-    suspend fun refreshWeather(cityWeather: CityWeather): CityWeather {
-        val response = weatherApi.getWeather(
-            lat = cityWeather.lat,
-            lon = cityWeather.lon,
-            apiKey = apiKey
-        )
+    override suspend fun refreshWeather(cityWeather: CityWeather): CityWeather {
+        val response = weatherApi.getWeather(lat = cityWeather.lat, lon = cityWeather.lon, apiKey = apiKey)
         val entity = response.toEntity(cityWeather.cityName).copy(id = cityWeather.id)
         cityWeatherDao.updateCityWeather(entity)
-        return entity.toCityWeather()
+        return entity.toDomainModel()
     }
 
-    suspend fun refreshAllWeather(): List<CityWeather> {
+    override suspend fun refreshAllWeather(): List<CityWeather> {
         val cities = cityWeatherDao.getAllCityWeather()
         val result = mutableListOf<CityWeather>()
         cities.collect { entities ->
             entities.forEach { entity ->
                 try {
-                    val response = weatherApi.getWeather(
-                        lat = entity.lat,
-                        lon = entity.lon,
-                        apiKey = apiKey
-                    )
+                    val response = weatherApi.getWeather(lat = entity.lat, lon = entity.lon, apiKey = apiKey)
                     val updatedEntity = response.toEntity(entity.cityName).copy(id = entity.id)
                     cityWeatherDao.updateCityWeather(updatedEntity)
-                    result.add(updatedEntity.toCityWeather())
+                    result.add(updatedEntity.toDomainModel())
                 } catch (e: Exception) {
-                    result.add(entity.toCityWeather())
+                    result.add(entity.toDomainModel())
                 }
             }
         }
         return result
     }
 
-    suspend fun deleteCityWeather(id: Long) {
+    override suspend fun deleteCityWeather(id: Long) {
         cityWeatherDao.deleteCityWeatherById(id)
     }
 
-    suspend fun searchCity(query: String): List<GeoResponse> {
-        return weatherApi.searchCity(query = query, apiKey = apiKey)
+    override suspend fun getForecast(lat: Double, lon: Double): ForecastResult {
+        val response = weatherApi.getForecast(lat = lat, lon = lon, apiKey = apiKey)
+        return response.toForecastResult()
     }
 
-    suspend fun getForecast(lat: Double, lon: Double): ForecastResult {
-        val response = weatherApi.getForecast(
-            lat = lat,
-            lon = lon,
-            apiKey = apiKey
-        )
-        return response.toForecastResult()
+    /**
+     * 搜尋城市（給 SearchRepositoryImpl 使用）
+     */
+    suspend fun searchCity(query: String): List<GeoResponse> {
+        return weatherApi.searchCity(query = query, apiKey = apiKey)
     }
 
     private fun ForecastResponse.toForecastResult(): ForecastResult {

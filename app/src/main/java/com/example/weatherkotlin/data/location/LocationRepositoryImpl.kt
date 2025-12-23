@@ -3,8 +3,9 @@ package com.example.weatherkotlin.data.location
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Location
 import androidx.core.content.ContextCompat
+import com.example.weatherkotlin.domain.model.Location
+import com.example.weatherkotlin.domain.repository.LocationRepository
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
@@ -15,19 +16,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
 
-data class LocationData(
-    val lat: Double,
-    val lon: Double
-)
-
 @Singleton
-class LocationService @Inject constructor(
+class LocationRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
-) {
+) : LocationRepository {
+
     private val fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
 
-    fun hasLocationPermission(): Boolean {
+    override fun hasLocationPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_FINE_LOCATION
@@ -38,7 +35,7 @@ class LocationService @Inject constructor(
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    suspend fun getCurrentLocation(): LocationData? {
+    override suspend fun getCurrentLocation(): Location? {
         if (!hasLocationPermission()) return null
 
         return suspendCancellableCoroutine { continuation ->
@@ -48,9 +45,9 @@ class LocationService @Inject constructor(
                 fusedLocationClient.getCurrentLocation(
                     Priority.PRIORITY_HIGH_ACCURACY,
                     cancellationTokenSource.token
-                ).addOnSuccessListener { location: Location? ->
+                ).addOnSuccessListener { location: android.location.Location? ->
                     if (location != null) {
-                        continuation.resume(LocationData(location.latitude, location.longitude))
+                        continuation.resume(Location(location.latitude, location.longitude))
                     } else {
                         continuation.resume(null)
                     }

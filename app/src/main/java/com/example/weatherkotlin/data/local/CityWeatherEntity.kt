@@ -2,7 +2,7 @@ package com.example.weatherkotlin.data.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.weatherkotlin.data.model.CityWeather
+import com.example.weatherkotlin.domain.model.CityWeather
 
 @Entity(tableName = "city_weather")
 data class CityWeatherEntity(
@@ -20,7 +20,10 @@ data class CityWeatherEntity(
     val updatedAt: Long = System.currentTimeMillis()
 )
 
-fun CityWeatherEntity.toCityWeather(): CityWeather {
+/**
+ * 轉換為 Domain Model
+ */
+fun CityWeatherEntity.toDomainModel(): CityWeather {
     return CityWeather(
         id = id,
         cityName = cityName,
