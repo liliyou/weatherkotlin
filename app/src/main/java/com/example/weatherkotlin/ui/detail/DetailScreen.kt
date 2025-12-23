@@ -24,8 +24,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.weatherkotlin.data.model.DailyWeather
 import com.example.weatherkotlin.data.model.HourlyWeather
+import com.example.weatherkotlin.data.remote.WeatherApi
 import com.example.weatherkotlin.data.model.PreviewData
 import com.example.weatherkotlin.ui.components.DailyWeatherColumn
 import com.example.weatherkotlin.ui.components.HourlyWeatherRow
@@ -90,10 +92,10 @@ fun DetailScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // 今日天氣 icon
-            coil.compose.AsyncImage(
-                model = "https://openweathermap.org/img/wn/${currentWeatherIcon}@2x.png",
+            AsyncImage(
+                model = WeatherApi.getLargeIconUrl(currentWeatherIcon),
                 contentDescription = "今日天氣",
-                modifier = Modifier.size(80.dp)
+                modifier = Modifier.size(150.dp)
             )
 
             // 地點

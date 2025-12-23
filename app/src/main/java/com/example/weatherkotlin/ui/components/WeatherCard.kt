@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,10 +35,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weatherkotlin.data.model.CityWeather
+import com.example.weatherkotlin.data.remote.WeatherApi
 import com.example.weatherkotlin.data.model.PreviewData
-import com.example.weatherkotlin.ui.theme.WeatherCardBackground
 import com.example.weatherkotlin.ui.theme.WeatherTextPrimary
+import com.example.weatherkotlin.ui.theme.weatherCardStyle
+import com.example.weatherkotlin.ui.theme.WeatherTextSecondary
 import com.example.weatherkotlin.ui.theme.WeatherkotlinTheme
+
+private val ICON_SIZE = 110.dp
+private val CARD_TOP_PADDING = 50.dp
 
 @Composable
 fun WeatherCard(
@@ -48,57 +54,79 @@ fun WeatherCard(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(WeatherCardBackground)
-            .clickable(onClick = onClick)
-            .padding(16.dp)
+            .widthIn(max = 600.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+        // 卡片背景（從上方偏移開始，讓圖示懸浮）
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = CARD_TOP_PADDING)
+                .weatherCardStyle()
+                .clickable(onClick = onClick)
         ) {
-            // 左側：圖示 + 城市資訊
-            Column {
-                AsyncImage(
-                    model = "https://openweathermap.org/img/wn/${cityWeather.weatherIcon}@2x.png",
-                    contentDescription = cityWeather.weatherDescription,
-                    modifier = Modifier.size(64.dp)
-                )
-                Text(
-                    text = cityWeather.cityName,
-                    color = WeatherTextPrimary,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium
-                )
-                Text(
-                    text = cityWeather.weatherDescription,
-                    color = WeatherTextPrimary,
-                    fontSize = 14.sp
-                )
-            }
-
-            // 右側：溫度資訊
-            Column(
-                horizontalAlignment = Alignment.End
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
             ) {
-                Text(
-                    text = "${cityWeather.currentTemp}",
-                    color = WeatherTextPrimary,
-                    fontSize = 48.sp,
-                    fontWeight = FontWeight.Light
-                )
-                Text(
-                    text = "最高 ${cityWeather.highTemp}",
-                    color = WeatherTextPrimary,
-                    fontSize = 14.sp
-                )
-                Text(
-                    text = "最低 ${cityWeather.lowTemp}",
-                    color = WeatherTextPrimary,
-                    fontSize = 14.sp
-                )
+                // 左側：城市資訊（限制最大寬度，允許換行）
+                Column(
+                    modifier = Modifier.widthIn(max = 180.dp)
+                ) {
+                    // 為圖示預留空間（圖示會覆蓋這個區域）
+                    Spacer(modifier = Modifier.height(ICON_SIZE - CARD_TOP_PADDING))
+                    Text(
+                        text = if (cityWeather.country.isNotEmpty()) {
+                            "${cityWeather.cityName}, ${cityWeather.country}"
+                        } else {
+                            cityWeather.cityName
+                        },
+                        color = WeatherTextPrimary,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = cityWeather.weatherDescription,
+                        color = WeatherTextSecondary,
+                        fontSize = 14.sp
+                    )
+                }
+
+                // 右側：溫度資訊
+                Column(
+                    horizontalAlignment = Alignment.End
+                ) {
+                    Text(
+                        text = "${cityWeather.currentTemp}°",
+                        color = WeatherTextPrimary,
+                        fontSize = 44.sp,
+                        fontWeight = FontWeight.Light,
+                        lineHeight = 44.sp
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "最高 ${cityWeather.highTemp}°",
+                        color = WeatherTextSecondary,
+                        fontSize = 13.sp
+                    )
+                    Text(
+                        text = "最低 ${cityWeather.lowTemp}°",
+                        color = WeatherTextSecondary,
+                        fontSize = 13.sp
+                    )
+                }
             }
         }
+
+        // 懸浮的天氣圖示（自然放在左上角，不用 offset）
+        AsyncImage(
+            model = WeatherApi.getLargeIconUrl(cityWeather.weatherIcon),
+            contentDescription = cityWeather.weatherDescription,
+            modifier = Modifier.size(ICON_SIZE)
+        )
     }
 }
 
@@ -141,75 +169,87 @@ fun WeatherCardSkeleton(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(WeatherCardBackground)
-            .padding(16.dp)
+            .widthIn(max = 600.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+        // 卡片背景（與 WeatherCard 一致）
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = CARD_TOP_PADDING)
+                .weatherCardStyle()
         ) {
-            // 左側骨架
-            Column {
-                // 天氣圖標佔位
-                Box(
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(shimmerBrush)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                // 城市名稱佔位
-                Box(
-                    modifier = Modifier
-                        .width(60.dp)
-                        .height(16.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                // 天氣描述佔位
-                Box(
-                    modifier = Modifier
-                        .width(40.dp)
-                        .height(14.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
-                )
-            }
-
-            // 右側骨架
-            Column(
-                horizontalAlignment = Alignment.End
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
             ) {
-                // 溫度佔位
-                Box(
-                    modifier = Modifier
-                        .width(50.dp)
-                        .height(48.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(shimmerBrush)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                // 最高溫佔位
-                Box(
-                    modifier = Modifier
-                        .width(60.dp)
-                        .height(14.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                // 最低溫佔位
-                Box(
-                    modifier = Modifier
-                        .width(60.dp)
-                        .height(14.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
-                )
+                // 左側骨架
+                Column(
+                    modifier = Modifier.widthIn(max = 180.dp)
+                ) {
+                    Spacer(modifier = Modifier.height(ICON_SIZE - CARD_TOP_PADDING))
+                    // 城市名稱佔位
+                    Box(
+                        modifier = Modifier
+                            .width(100.dp)
+                            .height(24.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(shimmerBrush)
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    // 天氣描述佔位
+                    Box(
+                        modifier = Modifier
+                            .width(60.dp)
+                            .height(14.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(shimmerBrush)
+                    )
+                }
+
+                // 右側骨架
+                Column(
+                    horizontalAlignment = Alignment.End
+                ) {
+                    // 溫度佔位
+                    Box(
+                        modifier = Modifier
+                            .width(70.dp)
+                            .height(44.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(shimmerBrush)
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    // 最高溫佔位
+                    Box(
+                        modifier = Modifier
+                            .width(60.dp)
+                            .height(13.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(shimmerBrush)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    // 最低溫佔位
+                    Box(
+                        modifier = Modifier
+                            .width(60.dp)
+                            .height(13.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(shimmerBrush)
+                    )
+                }
             }
         }
+
+        // 懸浮圖示佔位（自然放在左上角，不用 offset）
+        Box(
+            modifier = Modifier
+                .size(ICON_SIZE)
+                .clip(RoundedCornerShape(16.dp))
+                .background(shimmerBrush)
+        )
     }
 }
 
