@@ -118,7 +118,9 @@ fun HomeScreen(
         ) {
             LazyColumn(
                 contentPadding = PaddingValues(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 // 下拉更新或初始載入時顯示 skeleton
                 if (uiState.isRefreshing || (uiState.isLoading && uiState.currentLocationWeather == null)) {
