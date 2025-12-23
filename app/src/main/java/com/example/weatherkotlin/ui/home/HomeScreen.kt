@@ -123,32 +123,12 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 // 下拉更新或初始載入時顯示 skeleton
-                if (uiState.isRefreshing || (uiState.isLoading && uiState.currentLocationWeather == null)) {
-                    // 當前位置/預設城市的 skeleton
-                    item(key = "skeleton_current") {
-                        WeatherCardSkeleton()
-                    }
-                    // 已儲存城市的 skeleton
-                    val skeletonCount = if (uiState.cityWeatherList.isNotEmpty()) {
-                        uiState.cityWeatherList.size
-                    } else if (uiState.isRefreshing) {
-                        0 // 下拉更新時如果沒有已儲存城市就不顯示額外 skeleton
-                    } else {
-                        0
-                    }
-                    items(skeletonCount, key = { "skeleton_city_$it" }) {
+                if (uiState.isRefreshing || (uiState.isLoading && uiState.cityWeatherList.isEmpty())) {
+                    val skeletonCount = maxOf(uiState.cityWeatherList.size, 1)
+                    items(skeletonCount, key = { "skeleton_$it" }) {
                         WeatherCardSkeleton()
                     }
                 } else {
-                    uiState.currentLocationWeather?.let { locationWeather ->
-                        item(key = "current_location") {
-                            WeatherCard(
-                                cityWeather = locationWeather,
-                                onClick = { onCityClick(locationWeather) }
-                            )
-                        }
-                    }
-
                     items(
                         items = uiState.cityWeatherList,
                         key = { it.id }
@@ -174,8 +154,7 @@ private fun HomeScreenPreview() {
     WeatherkotlinTheme {
         HomeScreen(
             uiState = HomeUiState(
-                currentLocationWeather = PreviewData.sampleCityWeather,
-                cityWeatherList = PreviewData.sampleCityWeatherList,
+                cityWeatherList = listOf(PreviewData.sampleCityWeather) + PreviewData.sampleCityWeatherList,
                 isLoading = false,
                 hasLocationPermission = true,
                 locationPermissionRequested = true

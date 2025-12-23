@@ -49,6 +49,23 @@ class WeatherRepository @Inject constructor(
         return entity.copy(id = id).toCityWeather()
     }
 
+    /**
+     * 檢查城市是否存在，不存在則新增
+     * @return true 如果新增了城市，false 如果已存在
+     */
+    suspend fun addCityIfNotExists(lat: Double, lon: Double): Boolean {
+        val response = weatherApi.getWeather(lat = lat, lon = lon, apiKey = apiKey)
+        val cityName = response.name
+        val existing = cityWeatherDao.getCityByName(cityName)
+        return if (existing == null) {
+            val entity = response.toEntity()
+            cityWeatherDao.insertCityWeather(entity)
+            true
+        } else {
+            false
+        }
+    }
+
     suspend fun fetchWeatherOnly(lat: Double, lon: Double, cityName: String? = null): CityWeather {
         val response = weatherApi.getWeather(
             lat = lat,

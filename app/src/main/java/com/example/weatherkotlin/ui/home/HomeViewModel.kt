@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class HomeUiState(
-    val currentLocationWeather: CityWeather? = null,
     val cityWeatherList: List<CityWeather> = emptyList(),
     val isLoading: Boolean = true,
     val isRefreshing: Boolean = false,
@@ -40,18 +39,21 @@ class HomeViewModel @Inject constructor(
 
     private fun loadInitialWeather() {
         viewModelScope.launch {
-            // 初始化預設城市（台北）如果資料庫是空的
-            initializeDefaultCityIfEmpty()
-
             val hasPermission = locationService.hasLocationPermission()
             _uiState.value = _uiState.value.copy(
                 hasLocationPermission = hasPermission,
-                locationPermissionRequested = hasPermission,
-                isLoading = false
+                locationPermissionRequested = hasPermission
             )
+
             if (hasPermission) {
-                fetchCurrentLocationWeather()
+                // 有位置權限：加入當前位置城市（如果不存在）
+                addCurrentLocationCity()
+            } else {
+                // 無位置權限：初始化預設城市（台北）
+                initializeDefaultCityIfEmpty()
             }
+
+            _uiState.value = _uiState.value.copy(isLoading = false)
         }
     }
 
@@ -78,31 +80,25 @@ class HomeViewModel @Inject constructor(
             locationPermissionRequested = true
         )
         if (granted) {
-            fetchCurrentLocationWeather()
+            viewModelScope.launch {
+                addCurrentLocationCity()
+            }
+        } else {
+            // 無權限時初始化預設城市
+            viewModelScope.launch {
+                initializeDefaultCityIfEmpty()
+            }
         }
-        // 不需要 else，因為台北已在資料庫中
     }
 
-    fun fetchCurrentLocationWeather() {
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
-            try {
-                val location = locationService.getCurrentLocation()
-                if (location != null) {
-                    val weather = repository.fetchWeatherOnly(location.lat, location.lon)
-                    _uiState.value = _uiState.value.copy(
-                        currentLocationWeather = weather,
-                        isLoading = false
-                    )
-                } else {
-                    _uiState.value = _uiState.value.copy(isLoading = false)
-                }
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    error = e.message,
-                    isLoading = false
-                )
+    private suspend fun addCurrentLocationCity() {
+        try {
+            val location = locationService.getCurrentLocation()
+            if (location != null) {
+                repository.addCityIfNotExists(location.lat, location.lon)
             }
+        } catch (e: Exception) {
+            _uiState.value = _uiState.value.copy(error = e.message)
         }
     }
 
@@ -124,15 +120,6 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isRefreshing = true)
             try {
-                // 更新當前位置天氣（如果有權限）
-                if (_uiState.value.hasLocationPermission) {
-                    val location = locationService.getCurrentLocation()
-                    if (location != null) {
-                        val weather = repository.fetchWeatherOnly(location.lat, location.lon)
-                        _uiState.value = _uiState.value.copy(currentLocationWeather = weather)
-                    }
-                }
-                // 更新已儲存城市天氣（包含台北）
                 repository.refreshAllWeather()
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(error = e.message)

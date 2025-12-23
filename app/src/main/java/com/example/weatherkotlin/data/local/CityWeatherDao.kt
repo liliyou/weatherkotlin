@@ -17,6 +17,9 @@ interface CityWeatherDao {
     @Query("SELECT * FROM city_weather WHERE id = :id")
     suspend fun getCityWeatherById(id: Long): CityWeatherEntity?
 
+    @Query("SELECT * FROM city_weather WHERE cityName = :cityName LIMIT 1")
+    suspend fun getCityByName(cityName: String): CityWeatherEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCityWeather(cityWeather: CityWeatherEntity): Long
 
