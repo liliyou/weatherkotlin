@@ -2,7 +2,6 @@ package com.example.weatherkotlin.data.repository
 
 import com.example.search.domain.model.SearchResult
 import com.example.search.domain.repository.SearchRepository
-import com.example.weatherkotlin.data.local.SearchHistoryRepository
 import com.example.weatherkotlin.data.remote.WeatherApi
 import com.example.weatherkotlin.domain.repository.WeatherRepository
 import javax.inject.Inject

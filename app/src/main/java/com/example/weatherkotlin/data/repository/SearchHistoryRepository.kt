@@ -1,5 +1,7 @@
-package com.example.weatherkotlin.data.local
+package com.example.weatherkotlin.data.repository
 
+import com.example.weatherkotlin.data.local.SearchHistoryDao
+import com.example.weatherkotlin.data.local.SearchHistoryEntity
 import javax.inject.Inject
 import javax.inject.Singleton
 
