@@ -45,7 +45,7 @@ import com.example.weatherkotlin.ui.theme.WeatherkotlinTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
-@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun HomeScreen(
     uiState: HomeUiState,
@@ -71,6 +71,24 @@ fun HomeScreen(
         }
     }
 
+    HomeScreenContent(
+        uiState = uiState,
+        onSearchClick = onSearchClick,
+        onCityClick = onCityClick,
+        onRefresh = onRefresh,
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HomeScreenContent(
+    uiState: HomeUiState,
+    onSearchClick: () -> Unit,
+    onCityClick: (CityWeather) -> Unit,
+    onRefresh: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -159,7 +177,7 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenPreview() {
     WeatherkotlinTheme {
-        HomeScreen(
+        HomeScreenContent(
             uiState = HomeUiState(
                 cityWeatherList = listOf(PreviewData.sampleCityWeather) + PreviewData.sampleCityWeatherList,
                 isLoading = false,
@@ -168,7 +186,6 @@ private fun HomeScreenPreview() {
             ),
             onSearchClick = {},
             onCityClick = {},
-            onPermissionResult = {},
             onRefresh = {}
         )
     }
@@ -178,11 +195,10 @@ private fun HomeScreenPreview() {
 @Composable
 private fun HomeScreenLoadingPreview() {
     WeatherkotlinTheme {
-        HomeScreen(
+        HomeScreenContent(
             uiState = HomeUiState(isLoading = true),
             onSearchClick = {},
             onCityClick = {},
-            onPermissionResult = {},
             onRefresh = {}
         )
     }
