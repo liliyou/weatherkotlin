@@ -8,7 +8,7 @@ class SearchHistoryRepository @Inject constructor(
     private val searchHistoryDao: SearchHistoryDao
 ) {
     companion object {
-        private val DEFAULT_CITIES = listOf("高雄", "桃園", "台中", "新竹")
+        private val DEFAULT_CITIES = listOf("高雄市", "桃園市", "台中市", "新竹市")
     }
 
     suspend fun getSuggestedCities(): List<String> {

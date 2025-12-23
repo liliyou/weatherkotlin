@@ -12,10 +12,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,11 +33,9 @@ fun WeatherSearchBar(
     onQueryChange: (String) -> Unit,
     onSearch: () -> Unit,
     modifier: Modifier = Modifier,
-    placeholder: String = "請輸入城市",
+    placeholder: String = "輸入完整城市名（如：台北市）",
     readOnly: Boolean = false,
-    onClick: (() -> Unit)? = null,
-    showCloseButton: Boolean = false,
-    onClose: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null
 ) {
     Row(
         modifier = modifier
@@ -78,29 +74,12 @@ fun WeatherSearchBar(
             }
         }
         Spacer(modifier = Modifier.width(8.dp))
-        IconButton(
-            onClick = onSearch,
+        Icon(
+            imageVector = Icons.Default.Search,
+            contentDescription = "搜尋",
+            tint = WeatherTextPrimary,
             modifier = Modifier.size(24.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = "搜尋",
-                tint = WeatherTextPrimary
-            )
-        }
-        if (showCloseButton && onClose != null) {
-            Spacer(modifier = Modifier.width(8.dp))
-            IconButton(
-                onClick = onClose,
-                modifier = Modifier.size(24.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "關閉",
-                    tint = WeatherTextPrimary
-                )
-            }
-        }
+        )
     }
 }
 
@@ -125,8 +104,6 @@ private fun WeatherSearchBarWithTextPreview() {
             query = "台北",
             onQueryChange = {},
             onSearch = {},
-            showCloseButton = true,
-            onClose = {},
             modifier = Modifier.padding(16.dp)
         )
     }
