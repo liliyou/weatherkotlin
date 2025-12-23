@@ -3,6 +3,7 @@ package com.example.weatherkotlin.data.model
 data class CityWeather(
     val id: Long,
     val cityName: String,
+    val country: String = "",
     val weatherDescription: String,
     val weatherIcon: String,
     val currentTemp: Int,
@@ -27,16 +28,11 @@ data class DailyWeather(
     val weatherDescription: String
 )
 
-data class WeatherDetail(
-    val cityName: String,
-    val hourlyWeather: List<HourlyWeather>,
-    val dailyWeather: List<DailyWeather>
-)
-
 object PreviewData {
     val sampleCityWeather = CityWeather(
         id = 1,
         cityName = "台中市",
+        country = "TW",
         weatherDescription = "晴",
         weatherIcon = "01d",
         currentTemp = 27,
@@ -51,6 +47,7 @@ object PreviewData {
         CityWeather(
             id = 2,
             cityName = "台北市",
+            country = "TW",
             weatherDescription = "多雲",
             weatherIcon = "02d",
             currentTemp = 25,
@@ -80,11 +77,5 @@ object PreviewData {
         DailyWeather("週四", 27, 19, "02d", "多雲"),
         DailyWeather("週五", 29, 21, "01d", "晴"),
         DailyWeather("週六", 30, 22, "01d", "晴")
-    )
-
-    val sampleWeatherDetail = WeatherDetail(
-        cityName = "台北",
-        hourlyWeather = sampleHourlyWeather,
-        dailyWeather = sampleDailyWeather
     )
 }

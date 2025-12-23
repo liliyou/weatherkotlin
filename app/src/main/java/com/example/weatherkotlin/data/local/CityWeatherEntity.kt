@@ -9,6 +9,7 @@ data class CityWeatherEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val cityName: String,
+    val country: String = "",
     val weatherDescription: String,
     val weatherIcon: String,
     val currentTemp: Int,
@@ -23,20 +24,7 @@ fun CityWeatherEntity.toCityWeather(): CityWeather {
     return CityWeather(
         id = id,
         cityName = cityName,
-        weatherDescription = weatherDescription,
-        weatherIcon = weatherIcon,
-        currentTemp = currentTemp,
-        highTemp = highTemp,
-        lowTemp = lowTemp,
-        lat = lat,
-        lon = lon
-    )
-}
-
-fun CityWeather.toEntity(): CityWeatherEntity {
-    return CityWeatherEntity(
-        id = id,
-        cityName = cityName,
+        country = country,
         weatherDescription = weatherDescription,
         weatherIcon = weatherIcon,
         currentTemp = currentTemp,

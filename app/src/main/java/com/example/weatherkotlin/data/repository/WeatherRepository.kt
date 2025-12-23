@@ -1,6 +1,5 @@
 package com.example.weatherkotlin.data.repository
 
-import android.util.Log
 import com.example.weatherkotlin.data.local.CityWeatherDao
 import com.example.weatherkotlin.data.local.CityWeatherEntity
 import com.example.weatherkotlin.data.local.toCityWeather
@@ -51,17 +50,16 @@ class WeatherRepository @Inject constructor(
     }
 
     suspend fun fetchWeatherOnly(lat: Double, lon: Double, cityName: String? = null): CityWeather {
-        Log.d("WeatherRepository", "fetchWeatherOnly: lat=$lat, lon=$lon, apiKey=${apiKey.take(5)}...")
         val response = weatherApi.getWeather(
             lat = lat,
             lon = lon,
             apiKey = apiKey
         )
-        Log.d("WeatherRepository", "fetchWeatherOnly: response name=${response.name}")
         val weatherInfo = response.weather.firstOrNull()
         return CityWeather(
             id = -1,
             cityName = cityName ?: response.name,
+            country = response.sys.country,
             weatherDescription = weatherInfo?.description ?: "",
             weatherIcon = weatherInfo?.icon ?: "01d",
             currentTemp = response.main.temp.roundToInt(),
@@ -194,6 +192,7 @@ class WeatherRepository @Inject constructor(
         val weatherInfo = weather.firstOrNull()
         return CityWeatherEntity(
             cityName = overrideName ?: name,
+            country = sys.country,
             weatherDescription = weatherInfo?.description ?: "",
             weatherIcon = weatherInfo?.icon ?: "01d",
             currentTemp = main.temp.roundToInt(),
