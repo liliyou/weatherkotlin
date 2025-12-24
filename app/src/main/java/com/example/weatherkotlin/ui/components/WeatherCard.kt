@@ -106,12 +106,12 @@ fun WeatherCard(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "最高 ${cityWeather.highTemp}°",
+                        text = "H: ${cityWeather.highTemp}°",
                         color = WeatherTextSecondary,
                         fontSize = 13.sp
                     )
                     Text(
-                        text = "最低 ${cityWeather.lowTemp}°",
+                        text = "L: ${cityWeather.lowTemp}°",
                         color = WeatherTextSecondary,
                         fontSize = 13.sp
                     )
@@ -135,15 +135,15 @@ private fun WeatherCardPreview() {
         WeatherCard(
             cityWeather = CityWeather(
                 id = 1,
-                cityName = "台中市",
-                country = "TW",
-                weatherDescription = "晴",
+                cityName = "Tokyo",
+                country = "JP",
+                weatherDescription = "Clear",
                 weatherIcon = "01d",
                 currentTemp = 27,
                 highTemp = 30,
                 lowTemp = 22,
-                lat = 24.1477,
-                lon = 120.6736
+                lat = 35.6762,
+                lon = 139.6503
             ),
             onClick = {}
         )

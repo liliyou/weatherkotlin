@@ -92,7 +92,7 @@ fun SearchScreen(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "返回",
+                    contentDescription = "Back",
                     tint = SearchTextPrimary,
                     modifier = Modifier.size(24.dp)
                 )
@@ -180,14 +180,14 @@ private fun SearchResultItem(
 @Composable
 private fun SearchScreenPreview() {
     SearchScreen(
-        query = "台北",
+        query = "Tokyo",
         onQueryChange = {},
         onSearch = {},
         searchResults = listOf(
-            SearchResult("台北", 25.0330, 121.5654),
-            SearchResult("台北市", 25.0330, 121.5654)
+            SearchResult("Tokyo", 35.6762, 139.6503),
+            SearchResult("Tokyo, JP", 35.6762, 139.6503)
         ),
-        suggestedCities = listOf("桃園市", "高雄市", "台中市", "新竹市"),
+        suggestedCities = listOf("Tokyo", "London", "New York", "Sydney"),
         onResultClick = {},
         onSuggestedClick = {},
         onClose = {},
@@ -203,7 +203,7 @@ private fun SearchScreenEmptyPreview() {
         onQueryChange = {},
         onSearch = {},
         searchResults = emptyList(),
-        suggestedCities = listOf("桃園市", "高雄市", "台中市", "新竹市"),
+        suggestedCities = listOf("Tokyo", "London", "New York", "Sydney"),
         onResultClick = {},
         onSuggestedClick = {},
         onClose = {},

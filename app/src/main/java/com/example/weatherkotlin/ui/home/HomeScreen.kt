@@ -113,7 +113,7 @@ private fun HomeScreenContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "天氣",
+                text = "Weather",
                 color = WeatherTextPrimary,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold
@@ -127,7 +127,7 @@ private fun HomeScreenContent(
             ) {
                 Icon(
                     imageVector = Icons.Default.Search,
-                    contentDescription = "搜尋",
+                    contentDescription = "Search",
                     tint = WeatherTextPrimary,
                     modifier = Modifier.size(20.dp)
                 )
@@ -193,21 +193,21 @@ private fun HomeScreenPreview() {
                 cityWeatherList = listOf(
                     CityWeather(
                         id = 1,
-                        cityName = "台中市",
-                        country = "TW",
-                        weatherDescription = "晴",
+                        cityName = "Tokyo",
+                        country = "JP",
+                        weatherDescription = "Clear",
                         weatherIcon = "01d",
                         currentTemp = 27,
                         highTemp = 30,
                         lowTemp = 22,
-                        lat = 24.1477,
-                        lon = 120.6736
+                        lat = 35.6762,
+                        lon = 139.6503
                     ),
                     CityWeather(
                         id = 2,
-                        cityName = "台北市",
+                        cityName = "Taipei",
                         country = "TW",
-                        weatherDescription = "多雲",
+                        weatherDescription = "Clouds",
                         weatherIcon = "02d",
                         currentTemp = 25,
                         highTemp = 28,

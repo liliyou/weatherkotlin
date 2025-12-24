@@ -70,7 +70,7 @@ class DetailViewModel @Inject constructor(
                     dailyWeather = forecast.dailyWeather
                 )
             } catch (_: Exception) {
-                _errorMessage.emit("載入天氣失敗")
+                _errorMessage.emit("Failed to load weather")
             }
         }
     }
@@ -96,7 +96,7 @@ class DetailViewModel @Inject constructor(
                 )
             } catch (_: Exception) {
                 _uiState.value = _uiState.value.copy(isRefreshing = false)
-                _errorMessage.emit("更新天氣失敗")
+                _errorMessage.emit("Failed to refresh weather")
             }
         }
     }
@@ -109,7 +109,7 @@ class DetailViewModel @Inject constructor(
                 deleteCityWeatherUseCase(currentCityId)
                 _uiState.value = _uiState.value.copy(isDeleted = true)
             } catch (_: Exception) {
-                _errorMessage.emit("刪除城市失敗")
+                _errorMessage.emit("Failed to delete city")
             }
         }
     }

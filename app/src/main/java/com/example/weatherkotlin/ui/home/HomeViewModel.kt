@@ -115,7 +115,7 @@ class HomeViewModel @Inject constructor(
             try {
                 refreshAllWeatherUseCase()
             } catch (_: Exception) {
-                _errorMessage.emit("更新天氣失敗")
+                _errorMessage.emit("Failed to refresh weather")
             } finally {
                 _uiState.value = _uiState.value.copy(isRefreshing = false)
             }

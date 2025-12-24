@@ -14,7 +14,7 @@ class DateTimeFormatterTest {
 
     @Test
     fun `formatHourlyTime returns formatted time`() {
-        val calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Taipei")).apply {
+        val calendar = Calendar.getInstance(TimeZone.getDefault()).apply {
             set(Calendar.HOUR_OF_DAY, 14)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
@@ -23,12 +23,12 @@ class DateTimeFormatterTest {
 
         val result = DateTimeFormatter.formatHourlyTime(timestamp)
 
-        assertEquals("14時", result)
+        assertEquals("14", result)
     }
 
     @Test
     fun `formatHourlyTime returns correct format for morning`() {
-        val calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Taipei")).apply {
+        val calendar = Calendar.getInstance(TimeZone.getDefault()).apply {
             set(Calendar.HOUR_OF_DAY, 9)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
@@ -37,7 +37,7 @@ class DateTimeFormatterTest {
 
         val result = DateTimeFormatter.formatHourlyTime(timestamp)
 
-        assertEquals("09時", result)
+        assertEquals("09", result)
     }
 
     @Test
@@ -71,62 +71,62 @@ class DateTimeFormatterTest {
     }
 
     @Test
-    fun `formatDayOfWeek returns 今天 for today`() {
+    fun `formatDayOfWeek returns Today for today`() {
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN)
         val today = sdf.format(Date())
 
         val result = DateTimeFormatter.formatDayOfWeek(today)
 
-        assertEquals("今天", result)
+        assertEquals("Today", result)
     }
 
     @Test
     fun `formatDayOfWeek returns correct day for Sunday`() {
-        // 2024-12-22 是星期日
+        // 2024-12-22 is Sunday
         val result = DateTimeFormatter.formatDayOfWeek("2024-12-22")
-        assertEquals("週日", result)
+        assertEquals("Sun", result)
     }
 
     @Test
     fun `formatDayOfWeek returns correct day for Monday`() {
-        // 2024-12-23 是星期一
+        // 2024-12-23 is Monday
         val result = DateTimeFormatter.formatDayOfWeek("2024-12-23")
-        assertEquals("週一", result)
+        assertEquals("Mon", result)
     }
 
     @Test
     fun `formatDayOfWeek returns correct day for Tuesday`() {
-        // 2024-12-24 是星期二（今天會返回「今天」，所以用未來日期）
+        // 2025-12-30 is Tuesday
         val result = DateTimeFormatter.formatDayOfWeek("2025-12-30")
-        assertEquals("週二", result)
+        assertEquals("Tue", result)
     }
 
     @Test
     fun `formatDayOfWeek returns correct day for Wednesday`() {
-        // 2024-12-25 是星期三
+        // 2024-12-25 is Wednesday
         val result = DateTimeFormatter.formatDayOfWeek("2024-12-25")
-        assertEquals("週三", result)
+        assertEquals("Wed", result)
     }
 
     @Test
     fun `formatDayOfWeek returns correct day for Thursday`() {
-        // 2024-12-26 是星期四
+        // 2024-12-26 is Thursday
         val result = DateTimeFormatter.formatDayOfWeek("2024-12-26")
-        assertEquals("週四", result)
+        assertEquals("Thu", result)
     }
 
     @Test
     fun `formatDayOfWeek returns correct day for Friday`() {
-        // 2024-12-27 是星期五
+        // 2024-12-27 is Friday
         val result = DateTimeFormatter.formatDayOfWeek("2024-12-27")
-        assertEquals("週五", result)
+        assertEquals("Fri", result)
     }
 
     @Test
     fun `formatDayOfWeek returns correct day for Saturday`() {
-        // 2024-12-28 是星期六
+        // 2024-12-28 is Saturday
         val result = DateTimeFormatter.formatDayOfWeek("2024-12-28")
-        assertEquals("週六", result)
+        assertEquals("Sat", result)
     }
 
     @Test

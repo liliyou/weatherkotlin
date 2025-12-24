@@ -38,7 +38,7 @@ fun DailyWeatherColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "5 日天氣預報",
+            text = "5-Day Forecast",
             color = WeatherTextPrimary,
             fontSize = 15.sp,
             fontWeight = FontWeight.SemiBold,
@@ -110,11 +110,11 @@ private fun DailyWeatherColumnPreview() {
     WeatherkotlinTheme {
         DailyWeatherColumn(
             dailyWeatherList = listOf(
-                DailyWeather("今天", 30, 22, "01d", "晴"),
-                DailyWeather("週一", 28, 20, "02d", "多雲"),
-                DailyWeather("週二", 26, 19, "10d", "小雨"),
-                DailyWeather("週三", 25, 18, "10d", "小雨"),
-                DailyWeather("週四", 27, 19, "02d", "多雲")
+                DailyWeather("Today", 30, 22, "01d", "Clear"),
+                DailyWeather("Mon", 28, 20, "02d", "Clouds"),
+                DailyWeather("Tue", 26, 19, "10d", "Rain"),
+                DailyWeather("Wed", 25, 18, "10d", "Rain"),
+                DailyWeather("Thu", 27, 19, "02d", "Clouds")
             )
         )
     }

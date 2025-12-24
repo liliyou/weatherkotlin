@@ -13,7 +13,7 @@ class InitializeDefaultCityUseCase @Inject constructor(
     companion object {
         private const val DEFAULT_LAT = 25.0330
         private const val DEFAULT_LON = 121.5654
-        private const val DEFAULT_CITY = "台北市"
+        private const val DEFAULT_CITY = "Taipei"
     }
 
     suspend operator fun invoke() {

@@ -67,7 +67,7 @@ class SearchViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(searchResults = results)
         } catch (_: Exception) {
             _uiState.value = _uiState.value.copy(searchResults = emptyList())
-            _errorMessage.emit("搜尋失敗")
+            _errorMessage.emit("Search failed")
         }
     }
 
@@ -92,7 +92,7 @@ class SearchViewModel @Inject constructor(
                 loadSuggestedCities()
                 _uiState.value = _uiState.value.copy(addedCity = result)
             } catch (_: Exception) {
-                _errorMessage.emit("新增城市失敗")
+                _errorMessage.emit("Failed to add city")
             }
         }
     }

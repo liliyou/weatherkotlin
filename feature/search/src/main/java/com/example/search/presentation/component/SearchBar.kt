@@ -31,7 +31,7 @@ fun SearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    placeholder: String = "輸入完整城市名（如：台北市）",
+    placeholder: String = "Enter city name (e.g. Tokyo)",
     readOnly: Boolean = false,
     onClick: (() -> Unit)? = null
 ) {
@@ -74,7 +74,7 @@ fun SearchBar(
         Spacer(modifier = Modifier.width(8.dp))
         Icon(
             imageVector = Icons.Default.Search,
-            contentDescription = "搜尋",
+            contentDescription = "Search",
             tint = SearchTextPrimary,
             modifier = Modifier.size(24.dp)
         )
@@ -95,7 +95,7 @@ private fun SearchBarPreview() {
 @Composable
 private fun SearchBarWithTextPreview() {
     SearchBar(
-        query = "台北",
+        query = "Tokyo",
         onQueryChange = {},
         modifier = Modifier.padding(16.dp)
     )

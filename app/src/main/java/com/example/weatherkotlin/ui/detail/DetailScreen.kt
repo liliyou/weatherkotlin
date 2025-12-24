@@ -94,7 +94,7 @@ fun DetailScreen(
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "返回",
+                        contentDescription = "Back",
                         tint = WeatherTextPrimary,
                         modifier = Modifier.size(24.dp)
                     )
@@ -106,7 +106,7 @@ fun DetailScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Delete,
-                            contentDescription = "刪除",
+                            contentDescription = "Delete",
                             tint = WeatherTextPrimary,
                             modifier = Modifier.size(24.dp)
                         )
@@ -124,7 +124,7 @@ fun DetailScreen(
                 // 今日天氣圖示
                 AsyncImage(
                     model = WeatherIconUrl.getLargeIconUrl(uiState.currentWeatherIcon),
-                    contentDescription = "今日天氣",
+                    contentDescription = "Current weather",
                     modifier = Modifier.size(150.dp)
                 )
 
@@ -173,25 +173,25 @@ private fun DetailScreenPreview() {
     WeatherkotlinTheme {
         DetailScreen(
             uiState = DetailUiState(
-                cityName = "台北",
+                cityName = "Taipei",
                 currentWeatherIcon = "01d",
                 currentTemp = 25,
                 hourlyWeather = listOf(
-                    HourlyWeather("現在", 27, "01d", "晴"),
-                    HourlyWeather("14時", 28, "02d", "多雲"),
-                    HourlyWeather("15時", 27, "02d", "多雲"),
-                    HourlyWeather("16時", 26, "03d", "陰"),
-                    HourlyWeather("17時", 25, "04d", "陰"),
-                    HourlyWeather("18時", 24, "10d", "小雨"),
-                    HourlyWeather("19時", 23, "10d", "小雨"),
-                    HourlyWeather("20時", 22, "01n", "晴")
+                    HourlyWeather("Now", 27, "01d", "Clear"),
+                    HourlyWeather("14", 28, "02d", "Clouds"),
+                    HourlyWeather("15", 27, "02d", "Clouds"),
+                    HourlyWeather("16", 26, "03d", "Overcast"),
+                    HourlyWeather("17", 25, "04d", "Overcast"),
+                    HourlyWeather("18", 24, "10d", "Rain"),
+                    HourlyWeather("19", 23, "10d", "Rain"),
+                    HourlyWeather("20", 22, "01n", "Clear")
                 ),
                 dailyWeather = listOf(
-                    DailyWeather("今天", 30, 22, "01d", "晴"),
-                    DailyWeather("週一", 28, 20, "02d", "多雲"),
-                    DailyWeather("週二", 26, 19, "10d", "小雨"),
-                    DailyWeather("週三", 25, 18, "10d", "小雨"),
-                    DailyWeather("週四", 27, 19, "02d", "多雲")
+                    DailyWeather("Today", 30, 22, "01d", "Clear"),
+                    DailyWeather("Mon", 28, 20, "02d", "Clouds"),
+                    DailyWeather("Tue", 26, 19, "10d", "Rain"),
+                    DailyWeather("Wed", 25, 18, "10d", "Rain"),
+                    DailyWeather("Thu", 27, 19, "02d", "Clouds")
                 ),
                 canDelete = true
             ),

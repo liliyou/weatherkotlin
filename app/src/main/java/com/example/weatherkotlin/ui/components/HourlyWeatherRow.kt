@@ -87,7 +87,7 @@ private fun HourlyWeatherItem(
     hourlyWeather: HourlyWeather,
     modifier: Modifier = Modifier
 ) {
-    val isNow = hourlyWeather.time == "現在"
+    val isNow = hourlyWeather.time == "Now"
 
     Column(
         modifier = modifier
@@ -126,14 +126,14 @@ private fun HourlyWeatherRowPreview() {
     WeatherkotlinTheme {
         HourlyWeatherRow(
             hourlyWeatherList = listOf(
-                HourlyWeather("現在", 27, "01d", "晴"),
-                HourlyWeather("14時", 28, "02d", "多雲"),
-                HourlyWeather("15時", 27, "02d", "多雲"),
-                HourlyWeather("16時", 26, "03d", "陰"),
-                HourlyWeather("17時", 25, "04d", "陰"),
-                HourlyWeather("18時", 24, "10d", "小雨"),
-                HourlyWeather("19時", 23, "10d", "小雨"),
-                HourlyWeather("20時", 22, "01n", "晴")
+                HourlyWeather("Now", 27, "01d", "Clear"),
+                HourlyWeather("14", 28, "02d", "Clouds"),
+                HourlyWeather("15", 27, "02d", "Clouds"),
+                HourlyWeather("16", 26, "03d", "Overcast"),
+                HourlyWeather("17", 25, "04d", "Overcast"),
+                HourlyWeather("18", 24, "10d", "Rain"),
+                HourlyWeather("19", 23, "10d", "Rain"),
+                HourlyWeather("20", 22, "01n", "Clear")
             )
         )
     }
