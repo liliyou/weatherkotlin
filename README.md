@@ -1,43 +1,43 @@
 # WeatherKotlin
 
-一個使用 Kotlin + Jetpack Compose 開發的天氣應用程式，採用 Clean Architecture + MVVM 架構。
+A weather forecast app built with Kotlin + Jetpack Compose, following Clean Architecture + MVVM pattern.
 
-## 功能
+## Features
 
-- 自動取得當前位置天氣（需授權定位權限）
-- 預設顯示台北天氣（未授權定位時）
-- 搜尋城市並加入追蹤清單（自動防止重複新增）
-- 建議城市快速新增（高雄、桃園、台中、新竹）
-- 顯示城市當前天氣（溫度、天氣狀態、最高/最低溫）
-- 查看城市詳細天氣預報（逐時天氣、5 日預報）
-- 下拉更新天氣資料（Shimmer 骨架動畫）
-- 刪除已追蹤的城市
-- 搜尋歷史記錄
+- Auto-detect current location weather (requires location permission)
+- Default city (Taipei) when location permission denied
+- Search and add cities to tracking list (prevents duplicates)
+- Quick-add suggested cities (Kaohsiung, Taoyuan, Taichung, Hsinchu)
+- Display current weather (temperature, condition, high/low temp)
+- View detailed forecast (hourly weather, 5-day forecast)
+- Pull-to-refresh with skeleton loading animation
+- Remove tracked cities
+- Search history
 
-## 技術架構
+## Tech Stack
 
-### 架構模式
+### Architecture
 
-- **Clean Architecture** - 分離 Domain、Data、Presentation 層
+- **Clean Architecture** - Domain, Data, Presentation layers
 - **MVVM** (Model-View-ViewModel)
-- **Repository Pattern** - 統一資料來源管理
-- **Use Cases** - 封裝業務邏輯
+- **Repository Pattern** - Unified data source management
+- **Use Cases** - Encapsulated business logic
 
-### 技術棧
+### Libraries
 
-| 類別 | 技術 |
-|------|------|
+| Category | Technology |
+|----------|------------|
 | UI | Jetpack Compose + Material 3 |
-| 導航 | Navigation Compose |
-| 網路 | Retrofit + OkHttp + Gson |
-| 本地儲存 | Room Database |
-| 依賴注入 | Hilt |
-| 圖片載入 | Coil |
-| 非同步 | Kotlin Coroutines + Flow |
-| 定位服務 | Google Play Services Location |
-| 權限處理 | Accompanist Permissions |
+| Navigation | Navigation Compose |
+| Network | Retrofit + OkHttp + Gson |
+| Local Storage | Room Database |
+| DI | Hilt |
+| Image Loading | Coil |
+| Async | Kotlin Coroutines + Flow |
+| Location | Google Play Services Location |
+| Permissions | Accompanist Permissions |
 
-### 專案結構
+### Project Structure
 
 ```text
 app/src/main/java/com/example/weatherkotlin/
@@ -130,7 +130,7 @@ feature/search/                      # Search Feature Module
             └── SearchTheme.kt
 ```
 
-## 資料流程
+## Data Flow
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
@@ -155,41 +155,46 @@ feature/search/                      # Search Feature Module
 │    v            v               v               v   v            │
 │ ┌───────────┐ ┌───────────┐ ┌─────────────┐ ┌───────────┐        │
 │ │ WeatherApi│ │ Geocoding │ │   Room DB   │ │ Location  │        │
-│ │ (天氣API) │ │ (城市搜尋) │ │ (本地快取)  │ │ Service   │        │
+│ │           │ │   API     │ │ (Cache)     │ │ Service   │        │
 │ └───────────┘ └───────────┘ └─────────────┘ └───────────┘        │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-## API 端點
+## API Endpoints
 
-| API | 用途 |
-|-----|------|
-| `GET /data/2.5/weather` | 取得當前天氣 |
-| `GET /data/2.5/forecast` | 取得 5 天/3小時預報 |
-| `GET /geo/1.0/direct` | 城市名稱搜尋 |
+| API | Purpose |
+|-----|---------|
+| `GET /data/2.5/weather` | Get current weather |
+| `GET /data/2.5/forecast` | Get 5-day / 3-hour forecast |
+| `GET /geo/1.0/direct` | Search city by name |
 
-## 資料來源
+## Data Source
 
 [OpenWeatherMap API](https://openweathermap.org/api)
 
-## 安裝/設定
+## Setup
 
-1. Clone 專案並在 Android Studio 開啟
-1. 在專案根目錄的 `local.properties` 加入 API Key：
+1. Clone the project and open in Android Studio
+
+2. Add API key to `local.properties` in project root:
 
    ```text
    OPENWEATHER_API_KEY=your_api_key_here
    ```
 
-1. Build & Run：
+3. Build & Run:
 
    ```bash
    ./gradlew assembleDebug
    ```
 
-## 畫面預覽
+## Screenshots
 
-| 首頁 | 詳情頁 | 搜尋頁 |
+| Home | Detail | Search |
 |------|--------|--------|
-| ![首頁](goal/home.png) | ![詳情頁](goal/day.png) | ![搜尋頁](goal/search.png) |
-| 天氣卡片列表 + 下拉更新 | 逐時天氣 + 5 日預報 + 刪除 | 建議城市 + 搜尋結果 |
+| ![Home](goal/home_default.png) | ![Detail](goal/day.png) | ![Search](goal/wording_search.png) |
+| City weather cards + Pull-to-refresh | Hourly + 5-day forecast + Delete | Suggested cities + Search results |
+
+## AI Tools
+
+This project was developed with AI assistance. See [AI_TOOLS.md](AI_TOOLS.md) for details.
