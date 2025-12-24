@@ -47,47 +47,33 @@ fun HourlyWeatherRow(
         }
     }
 
-    Column(
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .widthIn(max = 600.dp)
             .weatherCardStyle()
             .padding(vertical = 16.dp)
     ) {
-        Text(
-            text = "今日天氣",
-            color = WeatherTextPrimary,
-            fontSize = 15.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
-        )
-
-        Box {
-            LazyRow(
-                state = listState,
-                contentPadding = PaddingValues(horizontal = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .drawWithContent {
-                        drawContent()
-                        if (canScrollRight) {
-                            drawRect(
-                                brush = Brush.horizontalGradient(
-                                    colors = listOf(
-                                        Color.Transparent,
-                                        WeatherCardBackground
-                                    ),
-                                    startX = size.width - 60.dp.toPx(),
-                                    endX = size.width
-                                )
-                            )
-                        }
-                    }
-            ) {
-                items(hourlyWeatherList) { hourlyWeather ->
-                    HourlyWeatherItem(hourlyWeather = hourlyWeather)
+        LazyRow(
+            state = listState,
+            contentPadding = PaddingValues(horizontal = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.drawWithContent {
+                drawContent()
+                if (canScrollRight) {
+                    drawRect(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(Color.Transparent, WeatherCardBackground),
+                            startX = size.width - 60.dp.toPx(),
+                            endX = size.width
+                        )
+                    )
                 }
+            }
+        ) {
+            items(hourlyWeatherList) { hourlyWeather ->
+                HourlyWeatherItem(hourlyWeather = hourlyWeather)
             }
         }
     }
