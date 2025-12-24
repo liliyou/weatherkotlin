@@ -1,45 +1,83 @@
 package com.example.weatherkotlin.data.util
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import java.util.TimeZone
 
 class DateTimeFormatterTest {
 
     @Test
-    fun `formatHourlyTime returns 現在 when within 1 hour`() {
-        val now = System.currentTimeMillis()
-        val timestamp = now / 1000 // 當前時間的 Unix timestamp
-
-        val result = DateTimeFormatter.formatHourlyTime(timestamp, now)
-
-        assertEquals("現在", result)
-    }
-
-    @Test
-    fun `formatHourlyTime returns 現在 when 30 minutes ago`() {
-        val now = System.currentTimeMillis()
-        val timestamp = (now / 1000) - (30 * 60) // 30 分鐘前
-
-        val result = DateTimeFormatter.formatHourlyTime(timestamp, now)
-
-        assertEquals("現在", result)
-    }
-
-    @Test
-    fun `formatHourlyTime returns formatted time when more than 1 hour`() {
+    fun `formatHourlyTime returns formatted time`() {
         val calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Taipei")).apply {
             set(Calendar.HOUR_OF_DAY, 14)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
         }
         val timestamp = calendar.timeInMillis / 1000
-        val now = timestamp - (2 * 3600) // 2 小時前
 
-        val result = DateTimeFormatter.formatHourlyTime(timestamp, now * 1000)
+        val result = DateTimeFormatter.formatHourlyTime(timestamp)
 
         assertEquals("14時", result)
+    }
+
+    @Test
+    fun `formatHourlyTime returns correct format for morning`() {
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Taipei")).apply {
+            set(Calendar.HOUR_OF_DAY, 9)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+        }
+        val timestamp = calendar.timeInMillis / 1000
+
+        val result = DateTimeFormatter.formatHourlyTime(timestamp)
+
+        assertEquals("09時", result)
+    }
+
+    @Test
+    fun `isToday returns true for today`() {
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN)
+        val today = sdf.format(Date())
+
+        val result = DateTimeFormatter.isToday(today)
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun `isToday returns false for yesterday`() {
+        val calendar = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, -1)
+        }
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN)
+        val yesterday = sdf.format(calendar.time)
+
+        val result = DateTimeFormatter.isToday(yesterday)
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `isToday returns false for invalid date`() {
+        val result = DateTimeFormatter.isToday("invalid-date")
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `formatDayOfWeek returns 今天 for today`() {
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN)
+        val today = sdf.format(Date())
+
+        val result = DateTimeFormatter.formatDayOfWeek(today)
+
+        assertEquals("今天", result)
     }
 
     @Test
@@ -58,8 +96,8 @@ class DateTimeFormatterTest {
 
     @Test
     fun `formatDayOfWeek returns correct day for Tuesday`() {
-        // 2024-12-24 是星期二
-        val result = DateTimeFormatter.formatDayOfWeek("2024-12-24")
+        // 2024-12-24 是星期二（今天會返回「今天」，所以用未來日期）
+        val result = DateTimeFormatter.formatDayOfWeek("2025-12-30")
         assertEquals("週二", result)
     }
 

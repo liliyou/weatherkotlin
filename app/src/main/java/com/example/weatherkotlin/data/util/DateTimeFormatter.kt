@@ -14,19 +14,26 @@ object DateTimeFormatter {
      * 格式化逐時天氣時間
      *
      * @param timestamp Unix timestamp（秒）
-     * @param currentTimeMillis 當前時間（毫秒），預設為系統時間
-     * @return "現在" 或 "HH時" 格式
+     * @return "HH時" 格式
      */
-    fun formatHourlyTime(
-        timestamp: Long,
-        currentTimeMillis: Long = System.currentTimeMillis()
-    ): String {
-        val now = currentTimeMillis / 1000
-        return if (kotlin.math.abs(timestamp - now) < 3600) {
-            "現在"
-        } else {
-            val sdf = SimpleDateFormat("HH時", Locale.TAIWAN)
-            sdf.format(Date(timestamp * 1000))
+    fun formatHourlyTime(timestamp: Long): String {
+        val sdf = SimpleDateFormat("HH時", Locale.TAIWAN)
+        return sdf.format(Date(timestamp * 1000))
+    }
+
+    /**
+     * 檢查日期是否為今天
+     *
+     * @param dateStr 日期字串，格式 "yyyy-MM-dd"
+     * @return true 如果是今天
+     */
+    fun isToday(dateStr: String): Boolean {
+        return try {
+            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN)
+            val today = sdf.format(Date())
+            dateStr == today
+        } catch (e: Exception) {
+            false
         }
     }
 
@@ -34,9 +41,10 @@ object DateTimeFormatter {
      * 格式化星期幾
      *
      * @param dateStr 日期字串，格式 "yyyy-MM-dd"
-     * @return "週一" ~ "週日" 或原始字串（解析失敗時）
+     * @return "今天"、"週一" ~ "週日" 或原始字串（解析失敗時）
      */
     fun formatDayOfWeek(dateStr: String): String {
+        if (isToday(dateStr)) return "今天"
         return try {
             val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.TAIWAN)
             val date = sdf.parse(dateStr) ?: return dateStr
