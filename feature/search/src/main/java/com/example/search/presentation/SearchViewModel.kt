@@ -22,6 +22,10 @@ class SearchViewModel @Inject constructor(
     private val getSuggestedCitiesUseCase: GetSuggestedCitiesUseCase
 ) : ViewModel() {
 
+    companion object {
+        private const val SEARCH_DEBOUNCE_MS = 500L
+    }
+
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
 
@@ -46,7 +50,7 @@ class SearchViewModel @Inject constructor(
             return
         }
         searchJob = viewModelScope.launch {
-            delay(300)
+            delay(SEARCH_DEBOUNCE_MS)
             searchCity(query)
         }
     }
