@@ -34,8 +34,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.weatherkotlin.data.remote.WeatherApi
 import com.example.weatherkotlin.domain.model.CityWeather
+import com.example.weatherkotlin.ui.util.WeatherIconUrl
 import com.example.weatherkotlin.ui.theme.WeatherTextPrimary
 import com.example.weatherkotlin.ui.theme.WeatherTextSecondary
 import com.example.weatherkotlin.ui.theme.WeatherkotlinTheme
@@ -121,7 +121,7 @@ fun WeatherCard(
 
         // 懸浮的天氣圖示
         AsyncImage(
-            model = WeatherApi.getLargeIconUrl(cityWeather.weatherIcon),
+            model = WeatherIconUrl.getLargeIconUrl(cityWeather.weatherIcon),
             contentDescription = cityWeather.weatherDescription,
             modifier = Modifier.size(ICON_SIZE)
         )

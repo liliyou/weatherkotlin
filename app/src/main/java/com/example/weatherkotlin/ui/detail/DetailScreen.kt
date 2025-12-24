@@ -34,7 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.weatherkotlin.data.remote.WeatherApi
+import com.example.weatherkotlin.ui.util.WeatherIconUrl
 import com.example.weatherkotlin.domain.model.DailyWeather
 import com.example.weatherkotlin.domain.model.HourlyWeather
 import com.example.weatherkotlin.ui.components.DailyWeatherColumn
@@ -123,7 +123,7 @@ fun DetailScreen(
             ) {
                 // 今日天氣圖示
                 AsyncImage(
-                    model = WeatherApi.getLargeIconUrl(uiState.currentWeatherIcon),
+                    model = WeatherIconUrl.getLargeIconUrl(uiState.currentWeatherIcon),
                     contentDescription = "今日天氣",
                     modifier = Modifier.size(150.dp)
                 )

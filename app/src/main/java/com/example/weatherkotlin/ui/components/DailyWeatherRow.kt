@@ -17,8 +17,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.weatherkotlin.data.remote.WeatherApi
 import com.example.weatherkotlin.domain.model.DailyWeather
+import com.example.weatherkotlin.ui.util.WeatherIconUrl
 import com.example.weatherkotlin.ui.theme.WeatherTextPrimary
 import com.example.weatherkotlin.ui.theme.WeatherTextSecondary
 import com.example.weatherkotlin.ui.theme.WeatherkotlinTheme
@@ -67,7 +67,7 @@ private fun DailyWeatherItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
-            model = WeatherApi.getIconUrl(dailyWeather.weatherIcon),
+            model = WeatherIconUrl.getIconUrl(dailyWeather.weatherIcon),
             contentDescription = dailyWeather.weatherDescription,
             modifier = Modifier.size(36.dp)
         )
