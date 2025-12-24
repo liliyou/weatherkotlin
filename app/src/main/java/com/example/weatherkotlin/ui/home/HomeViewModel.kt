@@ -21,8 +21,7 @@ data class HomeUiState(
     val isLoading: Boolean = true,
     val isRefreshing: Boolean = false,
     val hasLocationPermission: Boolean = false,
-    val locationPermissionRequested: Boolean = false,
-    val error: String? = null
+    val locationPermissionRequested: Boolean = false
 )
 
 @HiltViewModel
@@ -87,17 +86,15 @@ class HomeViewModel @Inject constructor(
     private suspend fun addCurrentLocationCity() {
         try {
             addCurrentLocationCityUseCase()
-        } catch (e: Exception) {
-            _uiState.value = _uiState.value.copy(error = e.message)
+        } catch (_: Exception) {
+            // 取得位置失敗時不做處理
         }
     }
 
     private fun observeCityWeather() {
         viewModelScope.launch {
             getAllCityWeatherUseCase()
-                .catch { e ->
-                    _uiState.value = _uiState.value.copy(error = e.message)
-                }
+                .catch { /* 忽略錯誤 */ }
                 .collect { cityWeatherList ->
                     _uiState.value = _uiState.value.copy(
                         cityWeatherList = cityWeatherList
@@ -111,15 +108,11 @@ class HomeViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(isRefreshing = true)
             try {
                 refreshAllWeatherUseCase()
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(error = e.message)
+            } catch (_: Exception) {
+                // 刷新失敗時不做處理
             } finally {
                 _uiState.value = _uiState.value.copy(isRefreshing = false)
             }
         }
-    }
-
-    fun clearError() {
-        _uiState.value = _uiState.value.copy(error = null)
     }
 }

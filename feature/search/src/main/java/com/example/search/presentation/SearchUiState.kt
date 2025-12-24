@@ -10,7 +10,5 @@ data class SearchUiState(
     val query: String = "",
     val searchResults: List<SearchResult> = emptyList(),
     val suggestedCities: List<String> = emptyList(),
-    val isLoading: Boolean = false,
-    val addedCity: AddedCityInfo? = null,
-    val error: String? = null
+    val addedCity: AddedCityInfo? = null
 )

@@ -2,7 +2,6 @@ package com.example.weatherkotlin.ui.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherkotlin.domain.model.CityWeather
 import com.example.weatherkotlin.domain.model.DailyWeather
 import com.example.weatherkotlin.domain.model.HourlyWeather
 import com.example.weatherkotlin.domain.repository.WeatherRepository
@@ -24,9 +23,7 @@ data class DetailUiState(
     val dailyWeather: List<DailyWeather> = emptyList(),
     val canDelete: Boolean = false,
     val isDeleted: Boolean = false,
-    val isLoading: Boolean = false,
-    val isRefreshing: Boolean = false,
-    val error: String? = null
+    val isRefreshing: Boolean = false
 )
 
 @HiltViewModel
@@ -54,7 +51,6 @@ class DetailViewModel @Inject constructor(
 
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
-                isLoading = true,
                 cityName = cityName,
                 canDelete = cityId > 0
             )
@@ -70,14 +66,10 @@ class DetailViewModel @Inject constructor(
                     currentWeatherIcon = currentWeather?.weatherIcon ?: "01d",
                     currentTemp = currentWeather?.currentTemp ?: 0,
                     hourlyWeather = forecast.hourlyWeather,
-                    dailyWeather = forecast.dailyWeather,
-                    isLoading = false
+                    dailyWeather = forecast.dailyWeather
                 )
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    error = e.message,
-                    isLoading = false
-                )
+            } catch (_: Exception) {
+                // 載入失敗時不做處理
             }
         }
     }
@@ -101,11 +93,8 @@ class DetailViewModel @Inject constructor(
                     dailyWeather = forecast.dailyWeather,
                     isRefreshing = false
                 )
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    error = e.message,
-                    isRefreshing = false
-                )
+            } catch (_: Exception) {
+                _uiState.value = _uiState.value.copy(isRefreshing = false)
             }
         }
     }
@@ -117,13 +106,9 @@ class DetailViewModel @Inject constructor(
             try {
                 deleteCityWeatherUseCase(currentCityId)
                 _uiState.value = _uiState.value.copy(isDeleted = true)
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(error = e.message)
+            } catch (_: Exception) {
+                // 刪除失敗時不做處理
             }
         }
-    }
-
-    fun clearError() {
-        _uiState.value = _uiState.value.copy(error = null)
     }
 }

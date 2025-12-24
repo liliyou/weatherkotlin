@@ -52,18 +52,12 @@ class SearchViewModel @Inject constructor(
     }
 
     private suspend fun searchCity(query: String) {
-        _uiState.value = _uiState.value.copy(isLoading = true)
         try {
             val results = searchCitiesUseCase(query)
-            _uiState.value = _uiState.value.copy(
-                searchResults = results,
-                isLoading = false
-            )
-        } catch (e: Exception) {
-            _uiState.value = _uiState.value.copy(
-                error = e.message,
-                isLoading = false
-            )
+            _uiState.value = _uiState.value.copy(searchResults = results)
+        } catch (_: Exception) {
+            // 搜尋失敗時清空結果
+            _uiState.value = _uiState.value.copy(searchResults = emptyList())
         }
     }
 
@@ -78,7 +72,6 @@ class SearchViewModel @Inject constructor(
 
     fun addCity(searchResult: SearchResult) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
             try {
                 val cityName = searchResult.cityName.split(",").first().trim()
                 val result = addCityUseCase(
@@ -89,15 +82,9 @@ class SearchViewModel @Inject constructor(
                 if (result.isNew) {
                     loadSuggestedCities()
                 }
-                _uiState.value = _uiState.value.copy(
-                    addedCity = result,
-                    isLoading = false
-                )
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    error = e.message,
-                    isLoading = false
-                )
+                _uiState.value = _uiState.value.copy(addedCity = result)
+            } catch (_: Exception) {
+                // 新增失敗時不做處理
             }
         }
     }
@@ -107,10 +94,6 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             searchCity(cityName)
         }
-    }
-
-    fun clearError() {
-        _uiState.value = _uiState.value.copy(error = null)
     }
 
     fun resetAddedCity() {
