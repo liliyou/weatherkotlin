@@ -50,46 +50,57 @@ app/src/main/java/com/example/weatherkotlin/
 │   │   ├── DailyWeather.kt
 │   │   ├── ForecastResult.kt
 │   │   ├── Location.kt
-│   │   └── PreviewData.kt
+│   │   └── AddCityResult.kt
 │   ├── repository/                  # Repository Interfaces
 │   │   ├── WeatherRepository.kt
 │   │   └── LocationRepository.kt
 │   └── usecase/                     # Use Cases
-│       ├── GetAllCityWeatherUseCase.kt
-│       ├── RefreshAllWeatherUseCase.kt
-│       ├── GetForecastUseCase.kt
-│       ├── DeleteCityWeatherUseCase.kt
-│       ├── AddCurrentLocationCityUseCase.kt
-│       └── InitializeDefaultCityUseCase.kt
+│       ├── city/
+│       │   ├── AddCurrentLocationCityUseCase.kt
+│       │   ├── DeleteCityWeatherUseCase.kt
+│       │   └── InitializeDefaultCityUseCase.kt
+│       └── weather/
+│           ├── GetAllCityWeatherUseCase.kt
+│           ├── GetForecastUseCase.kt
+│           └── RefreshAllWeatherUseCase.kt
 ├── data/                            # Data Layer
 │   ├── local/                       # Room Database
 │   │   ├── CityWeatherEntity.kt
 │   │   ├── CityWeatherDao.kt
 │   │   ├── SearchHistoryEntity.kt
 │   │   ├── SearchHistoryDao.kt
-│   │   ├── SearchHistoryRepository.kt
 │   │   └── WeatherDatabase.kt
 │   ├── remote/                      # Retrofit API
 │   │   ├── WeatherApi.kt
+│   │   ├── ApiKeyInterceptor.kt
 │   │   └── dto/
 │   │       ├── WeatherResponse.kt
 │   │       ├── ForecastResponse.kt
 │   │       └── GeoResponse.kt
-│   ├── location/                    # Location Service
-│   │   └── LocationRepositoryImpl.kt
-│   └── repository/                  # Repository Implementations
-│       ├── WeatherRepositoryImpl.kt
-│       └── SearchRepositoryImpl.kt
+│   ├── repository/                  # Repository Implementations
+│   │   ├── WeatherRepositoryImpl.kt
+│   │   ├── SearchRepositoryImpl.kt
+│   │   ├── LocationRepositoryImpl.kt
+│   │   └── SearchHistoryRepository.kt
+│   └── util/
+│       └── DateTimeFormatter.kt
 ├── di/
 │   └── AppModule.kt                 # Hilt DI Module
 ├── navigation/
 │   └── WeatherNavigation.kt
 └── ui/                              # Presentation Layer
-    ├── theme/                       # Theme
-    ├── components/                  # Shared UI Components
+    ├── theme/
+    │   ├── Theme.kt
+    │   ├── Color.kt
+    │   ├── Type.kt
+    │   └── CardModifiers.kt
+    ├── util/
+    │   └── WeatherIconUrl.kt
+    ├── components/
     │   ├── WeatherCard.kt
     │   ├── HourlyWeatherRow.kt
-    │   └── DailyWeatherRow.kt
+    │   ├── DailyWeatherRow.kt
+    │   └── LocationPermissionHandler.kt
     ├── home/
     │   ├── HomeScreen.kt
     │   └── HomeViewModel.kt
@@ -101,7 +112,8 @@ feature/search/                      # Search Feature Module
 └── src/main/java/com/example/search/
     ├── domain/
     │   ├── model/
-    │   │   └── SearchResult.kt
+    │   │   ├── SearchResult.kt
+    │   │   └── AddedCityInfo.kt
     │   ├── repository/
     │   │   └── SearchRepository.kt
     │   └── usecase/
