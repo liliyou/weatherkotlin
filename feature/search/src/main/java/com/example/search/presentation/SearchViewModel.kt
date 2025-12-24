@@ -71,15 +71,6 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun onSearch() {
-        val query = _uiState.value.query
-        if (query.isNotBlank()) {
-            viewModelScope.launch {
-                searchCity(query)
-            }
-        }
-    }
-
     fun addCity(searchResult: SearchResult) {
         viewModelScope.launch {
             try {

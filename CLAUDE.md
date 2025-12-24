@@ -7,14 +7,15 @@ Kotlin + Jetpack Compose 天氣應用程式，採用 Clean Architecture + MVVM �
 ### 已完成
 
 - [x] 查看當前位置天氣（需定位權限）
-- [x] 查看預設城市（台北）天氣（未授權定位時）
+- [x] 查看預設城市（Taipei）天氣（未授權定位時）
 - [x] 搜尋城市並加入追蹤清單（自動防重複）
-- [x] 透過建議城市快速新增（高雄、桃園、台中、新竹）
+- [x] 透過建議城市快速新增（Tokyo, London, New York, Sydney）
 - [x] 查看城市天氣（當前溫度、狀態、最高/最低溫）
 - [x] 查看逐時天氣預報（8 小時）
 - [x] 查看 5 日天氣預報
-- [x] 下拉更新天氣資料
+- [x] 下拉更新天氣資料（Skeleton 動畫）
 - [x] 刪除已追蹤的城市
+- [x] 搜尋歷史記錄
 
 ### 待開發
 
@@ -40,8 +41,8 @@ Data Layer
 └── util/       → DateTimeFormatter
 
 Presentation Layer (ui/)
-├── theme/      → Theme, Colors, CardModifiers
-├── util/       → WeatherIconUrl
+├── theme/      → Theme, Colors
+├── util/       → CardModifiers, WeatherIconUrl
 ├── components/ → 共用 UI 元件
 ├── home/       → 首頁
 └── detail/     → 詳情頁

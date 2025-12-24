@@ -123,7 +123,6 @@ fun WeatherNavigation(
             SearchScreen(
                 query = uiState.query,
                 onQueryChange = viewModel::onQueryChange,
-                onSearch = viewModel::onSearch,
                 searchResults = uiState.searchResults,
                 suggestedCities = uiState.suggestedCities,
                 onResultClick = { viewModel.addCity(it) },
