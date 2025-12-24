@@ -38,7 +38,8 @@ class WeatherRepositoryImpl @Inject constructor(
 
     override suspend fun fetchAndSaveWeather(lat: Double, lon: Double, cityName: String?): CityWeather {
         val response = weatherApi.getWeather(lat = lat, lon = lon)
-        val entity = response.toEntity(cityName)
+        val newPosition = (cityWeatherDao.getMaxPosition() ?: 0) + 1
+        val entity = response.toEntity(cityName, newPosition)
         val id = cityWeatherDao.insertCityWeather(entity)
         return entity.copy(id = id).toDomainModel()
     }
@@ -50,8 +51,9 @@ class WeatherRepositoryImpl @Inject constructor(
     override suspend fun addCityIfNotExists(lat: Double, lon: Double, cityName: String?): AddCityResult {
         val response = weatherApi.getWeather(lat = lat, lon = lon)
         val existing = cityWeatherDao.getCityByApiId(response.id)
+        val newPosition = (cityWeatherDao.getMaxPosition() ?: 0) + 1
         return if (existing == null) {
-            val entity = response.toEntity(cityName)
+            val entity = response.toEntity(cityName, newPosition)
             val id = cityWeatherDao.insertCityWeather(entity)
             AddCityResult(
                 cityWeather = entity.copy(id = id).toDomainModel(),
@@ -59,7 +61,7 @@ class WeatherRepositoryImpl @Inject constructor(
             )
         } else {
             // 城市已存在，更新資料並移到最上方
-            val updatedEntity = response.toEntity(existing.cityName).copy(id = existing.id)
+            val updatedEntity = response.toEntity(existing.cityName, newPosition).copy(id = existing.id)
             cityWeatherDao.updateCityWeather(updatedEntity)
             AddCityResult(
                 cityWeather = updatedEntity.toDomainModel(),
@@ -70,7 +72,10 @@ class WeatherRepositoryImpl @Inject constructor(
 
     override suspend fun refreshWeather(cityWeather: CityWeather): CityWeather {
         val response = weatherApi.getWeather(lat = cityWeather.lat, lon = cityWeather.lon)
-        val entity = response.toEntity(cityWeather.cityName).copy(id = cityWeather.id)
+        val originalEntity = cityWeatherDao.getCityWeatherById(cityWeather.id)
+        val entity = response.toEntity(cityWeather.cityName, originalEntity?.position ?: 0).copy(
+            id = cityWeather.id
+        )
         cityWeatherDao.updateCityWeather(entity)
         return entity.toDomainModel()
     }
@@ -80,7 +85,9 @@ class WeatherRepositoryImpl @Inject constructor(
         return entities.map { entity ->
             try {
                 val response = weatherApi.getWeather(lat = entity.lat, lon = entity.lon)
-                val updatedEntity = response.toEntity(entity.cityName).copy(id = entity.id)
+                val updatedEntity = response.toEntity(entity.cityName, entity.position).copy(
+                    id = entity.id
+                )
                 cityWeatherDao.updateCityWeather(updatedEntity)
                 updatedEntity.toDomainModel()
             } catch (e: Exception) {
@@ -128,7 +135,7 @@ class WeatherRepositoryImpl @Inject constructor(
         )
     }
 
-    private fun WeatherResponse.toEntity(overrideName: String? = null): CityWeatherEntity {
+    private fun WeatherResponse.toEntity(overrideName: String? = null, position: Int = 0): CityWeatherEntity {
         val weatherInfo = weather.firstOrNull()
         return CityWeatherEntity(
             apiCityId = id,
@@ -140,7 +147,8 @@ class WeatherRepositoryImpl @Inject constructor(
             highTemp = main.tempMax.roundToInt(),
             lowTemp = main.tempMin.roundToInt(),
             lat = coord.lat,
-            lon = coord.lon
+            lon = coord.lon,
+            position = position
         )
     }
 }

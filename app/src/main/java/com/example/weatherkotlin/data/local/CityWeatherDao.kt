@@ -11,8 +11,11 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CityWeatherDao {
 
-    @Query("SELECT * FROM city_weather ORDER BY updatedAt DESC")
+    @Query("SELECT * FROM city_weather ORDER BY position DESC")
     fun getAllCityWeather(): Flow<List<CityWeatherEntity>>
+
+    @Query("SELECT MAX(position) FROM city_weather")
+    suspend fun getMaxPosition(): Int?
 
     @Query("SELECT * FROM city_weather WHERE id = :id")
     suspend fun getCityWeatherById(id: Long): CityWeatherEntity?

@@ -18,7 +18,7 @@ data class CityWeatherEntity(
     val lowTemp: Int,
     val lat: Double,
     val lon: Double,
-    val updatedAt: Long = System.currentTimeMillis()
+    val position: Int = 0
 )
 
 /**
