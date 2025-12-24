@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CityWeatherDao {
 
-    @Query("SELECT * FROM city_weather ORDER BY id DESC")
+    @Query("SELECT * FROM city_weather ORDER BY updatedAt DESC")
     fun getAllCityWeather(): Flow<List<CityWeatherEntity>>
 
     @Query("SELECT * FROM city_weather WHERE id = :id")
@@ -19,6 +19,9 @@ interface CityWeatherDao {
 
     @Query("SELECT * FROM city_weather WHERE cityName = :cityName LIMIT 1")
     suspend fun getCityByName(cityName: String): CityWeatherEntity?
+
+    @Query("SELECT * FROM city_weather WHERE apiCityId = :apiCityId LIMIT 1")
+    suspend fun getCityByApiId(apiCityId: Long): CityWeatherEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCityWeather(cityWeather: CityWeatherEntity): Long

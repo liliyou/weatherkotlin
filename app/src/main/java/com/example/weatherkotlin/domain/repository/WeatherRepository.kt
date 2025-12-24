@@ -20,15 +20,15 @@ interface WeatherRepository {
     suspend fun fetchAndSaveWeather(lat: Double, lon: Double, cityName: String? = null): CityWeather
 
     /**
-     * 檢查城市是否已存在
+     * 檢查城市是否已存在（依 API 城市 ID）
      */
-    suspend fun isCityExists(cityName: String): Boolean
+    suspend fun isCityExists(apiCityId: Long): Boolean
 
     /**
      * 若城市不存在則新增
      * @return true 如果新增了城市，false 如果已存在
      */
-    suspend fun addCityIfNotExists(lat: Double, lon: Double): Boolean
+    suspend fun addCityIfNotExists(lat: Double, lon: Double, cityName: String? = null): Boolean
 
     /**
      * 刷新單一城市天氣

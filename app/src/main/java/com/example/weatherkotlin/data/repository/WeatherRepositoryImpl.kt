@@ -37,19 +37,21 @@ class WeatherRepositoryImpl @Inject constructor(
         return entity.copy(id = id).toDomainModel()
     }
 
-    override suspend fun isCityExists(cityName: String): Boolean {
-        return cityWeatherDao.getCityByName(cityName) != null
+    override suspend fun isCityExists(apiCityId: Long): Boolean {
+        return cityWeatherDao.getCityByApiId(apiCityId) != null
     }
 
-    override suspend fun addCityIfNotExists(lat: Double, lon: Double): Boolean {
+    override suspend fun addCityIfNotExists(lat: Double, lon: Double, cityName: String?): Boolean {
         val response = weatherApi.getWeather(lat = lat, lon = lon, apiKey = apiKey)
-        val cityName = response.name
-        val existing = cityWeatherDao.getCityByName(cityName)
+        val existing = cityWeatherDao.getCityByApiId(response.id)
         return if (existing == null) {
-            val entity = response.toEntity()
+            val entity = response.toEntity(cityName)
             cityWeatherDao.insertCityWeather(entity)
             true
         } else {
+            // 城市已存在，更新資料並移到最上方
+            val updatedEntity = response.toEntity(existing.cityName).copy(id = existing.id)
+            cityWeatherDao.updateCityWeather(updatedEntity)
             false
         }
     }
@@ -87,6 +89,7 @@ class WeatherRepositoryImpl @Inject constructor(
     private fun WeatherResponse.toEntity(overrideName: String? = null): CityWeatherEntity {
         val weatherInfo = weather.firstOrNull()
         return CityWeatherEntity(
+            apiCityId = id,
             cityName = overrideName ?: name,
             country = sys.country,
             weatherDescription = weatherInfo?.description ?: "",
