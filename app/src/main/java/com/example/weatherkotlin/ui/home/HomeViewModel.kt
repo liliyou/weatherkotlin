@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherkotlin.domain.model.CityWeather
 import com.example.weatherkotlin.domain.repository.LocationRepository
-import com.example.weatherkotlin.domain.usecase.AddCurrentLocationCityUseCase
-import com.example.weatherkotlin.domain.usecase.GetAllCityWeatherUseCase
-import com.example.weatherkotlin.domain.usecase.InitializeDefaultCityUseCase
-import com.example.weatherkotlin.domain.usecase.RefreshAllWeatherUseCase
+import com.example.weatherkotlin.domain.usecase.city.AddCurrentLocationCityUseCase
+import com.example.weatherkotlin.domain.usecase.city.InitializeDefaultCityUseCase
+import com.example.weatherkotlin.domain.usecase.weather.GetAllCityWeatherUseCase
+import com.example.weatherkotlin.domain.usecase.weather.RefreshAllWeatherUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -6,8 +6,8 @@ import com.example.weatherkotlin.domain.model.CityWeather
 import com.example.weatherkotlin.domain.model.DailyWeather
 import com.example.weatherkotlin.domain.model.HourlyWeather
 import com.example.weatherkotlin.domain.repository.WeatherRepository
-import com.example.weatherkotlin.domain.usecase.DeleteCityWeatherUseCase
-import com.example.weatherkotlin.domain.usecase.GetForecastUseCase
+import com.example.weatherkotlin.domain.usecase.city.DeleteCityWeatherUseCase
+import com.example.weatherkotlin.domain.usecase.weather.GetForecastUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow

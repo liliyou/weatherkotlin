@@ -1,4 +1,4 @@
-package com.example.weatherkotlin.domain.usecase
+package com.example.weatherkotlin.domain.usecase.city
 
 import com.example.weatherkotlin.domain.repository.LocationRepository
 import com.example.weatherkotlin.domain.repository.WeatherRepository
