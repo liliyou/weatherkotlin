@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -64,8 +63,12 @@ fun HourlyWeatherRow(
                 if (canScrollRight) {
                     drawRect(
                         brush = Brush.horizontalGradient(
-                            colors = listOf(Color.Transparent, WeatherCardBackground),
-                            startX = size.width - 60.dp.toPx(),
+                            colorStops = arrayOf(
+                                0f to WeatherCardBackground.copy(alpha = 0f),
+                                0.3f to WeatherCardBackground.copy(alpha = 0.5f),
+                                1f to WeatherCardBackground
+                            ),
+                            startX = size.width - 100.dp.toPx(),
                             endX = size.width
                         )
                     )
