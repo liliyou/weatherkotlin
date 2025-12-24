@@ -1,4 +1,8 @@
-package com.example.weatherkotlin.domain.model
+package com.example.weatherkotlin.ui.preview
+
+import com.example.weatherkotlin.domain.model.CityWeather
+import com.example.weatherkotlin.domain.model.DailyWeather
+import com.example.weatherkotlin.domain.model.HourlyWeather
 
 /**
  * Preview 用假資料

@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weatherkotlin.data.remote.WeatherApi
 import com.example.weatherkotlin.domain.model.DailyWeather
-import com.example.weatherkotlin.domain.model.PreviewData
+import com.example.weatherkotlin.ui.preview.PreviewData
 import com.example.weatherkotlin.ui.theme.WeatherTextPrimary
 import com.example.weatherkotlin.ui.theme.WeatherTextSecondary
 import com.example.weatherkotlin.ui.theme.WeatherkotlinTheme

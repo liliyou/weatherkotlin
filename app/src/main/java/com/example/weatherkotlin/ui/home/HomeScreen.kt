@@ -32,7 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherkotlin.domain.model.CityWeather
-import com.example.weatherkotlin.domain.model.PreviewData
+import com.example.weatherkotlin.ui.preview.PreviewData
 import com.example.weatherkotlin.ui.components.LocationPermissionHandler
 import com.example.weatherkotlin.ui.components.WeatherCard
 import com.example.weatherkotlin.ui.components.WeatherCardSkeleton
