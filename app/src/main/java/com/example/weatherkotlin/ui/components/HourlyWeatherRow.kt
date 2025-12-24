@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weatherkotlin.data.remote.WeatherApi
 import com.example.weatherkotlin.domain.model.HourlyWeather
-import com.example.weatherkotlin.ui.preview.PreviewData
 import com.example.weatherkotlin.ui.theme.WeatherCardBackground
 import com.example.weatherkotlin.ui.theme.WeatherTextPrimary
 import com.example.weatherkotlin.ui.theme.WeatherTextSecondary
@@ -137,7 +136,16 @@ private fun HourlyWeatherItem(
 private fun HourlyWeatherRowPreview() {
     WeatherkotlinTheme {
         HourlyWeatherRow(
-            hourlyWeatherList = PreviewData.sampleHourlyWeather
+            hourlyWeatherList = listOf(
+                HourlyWeather("現在", 27, "01d", "晴"),
+                HourlyWeather("14時", 28, "02d", "多雲"),
+                HourlyWeather("15時", 27, "02d", "多雲"),
+                HourlyWeather("16時", 26, "03d", "陰"),
+                HourlyWeather("17時", 25, "04d", "陰"),
+                HourlyWeather("18時", 24, "10d", "小雨"),
+                HourlyWeather("19時", 23, "10d", "小雨"),
+                HourlyWeather("20時", 22, "01n", "晴")
+            )
         )
     }
 }

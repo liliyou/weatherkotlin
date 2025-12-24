@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.search.presentation.SearchScreen
 import com.example.search.presentation.SearchViewModel
+import com.example.weatherkotlin.domain.model.CityWeather
 import com.example.weatherkotlin.ui.detail.DetailScreen
 import com.example.weatherkotlin.ui.detail.DetailViewModel
 import com.example.weatherkotlin.ui.home.HomeScreen

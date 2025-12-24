@@ -28,9 +28,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weatherkotlin.data.remote.WeatherApi
+import com.example.weatherkotlin.domain.model.DailyWeather
+import com.example.weatherkotlin.domain.model.HourlyWeather
 import com.example.weatherkotlin.ui.components.DailyWeatherColumn
 import com.example.weatherkotlin.ui.components.HourlyWeatherRow
-import com.example.weatherkotlin.ui.preview.PreviewData
 import com.example.weatherkotlin.ui.theme.WeatherBackground
 import com.example.weatherkotlin.ui.theme.WeatherTextPrimary
 import com.example.weatherkotlin.ui.theme.WeatherkotlinTheme
@@ -147,8 +148,23 @@ private fun DetailScreenPreview() {
                 cityName = "台北",
                 currentWeatherIcon = "01d",
                 currentTemp = 25,
-                hourlyWeather = PreviewData.sampleHourlyWeather,
-                dailyWeather = PreviewData.sampleDailyWeather,
+                hourlyWeather = listOf(
+                    HourlyWeather("現在", 27, "01d", "晴"),
+                    HourlyWeather("14時", 28, "02d", "多雲"),
+                    HourlyWeather("15時", 27, "02d", "多雲"),
+                    HourlyWeather("16時", 26, "03d", "陰"),
+                    HourlyWeather("17時", 25, "04d", "陰"),
+                    HourlyWeather("18時", 24, "10d", "小雨"),
+                    HourlyWeather("19時", 23, "10d", "小雨"),
+                    HourlyWeather("20時", 22, "01n", "晴")
+                ),
+                dailyWeather = listOf(
+                    DailyWeather("今天", 30, 22, "01d", "晴"),
+                    DailyWeather("週一", 28, 20, "02d", "多雲"),
+                    DailyWeather("週二", 26, 19, "10d", "小雨"),
+                    DailyWeather("週三", 25, 18, "10d", "小雨"),
+                    DailyWeather("週四", 27, 19, "02d", "多雲")
+                ),
                 canDelete = true
             ),
             onBackClick = {},

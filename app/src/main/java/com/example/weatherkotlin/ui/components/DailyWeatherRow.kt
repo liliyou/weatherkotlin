@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weatherkotlin.data.remote.WeatherApi
 import com.example.weatherkotlin.domain.model.DailyWeather
-import com.example.weatherkotlin.ui.preview.PreviewData
 import com.example.weatherkotlin.ui.theme.WeatherTextPrimary
 import com.example.weatherkotlin.ui.theme.WeatherTextSecondary
 import com.example.weatherkotlin.ui.theme.WeatherkotlinTheme
@@ -110,7 +109,13 @@ private fun DailyWeatherItem(
 private fun DailyWeatherColumnPreview() {
     WeatherkotlinTheme {
         DailyWeatherColumn(
-            dailyWeatherList = PreviewData.sampleDailyWeather
+            dailyWeatherList = listOf(
+                DailyWeather("今天", 30, 22, "01d", "晴"),
+                DailyWeather("週一", 28, 20, "02d", "多雲"),
+                DailyWeather("週二", 26, 19, "10d", "小雨"),
+                DailyWeather("週三", 25, 18, "10d", "小雨"),
+                DailyWeather("週四", 27, 19, "02d", "多雲")
+            )
         )
     }
 }

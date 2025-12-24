@@ -36,7 +36,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weatherkotlin.data.remote.WeatherApi
 import com.example.weatherkotlin.domain.model.CityWeather
-import com.example.weatherkotlin.ui.preview.PreviewData
 import com.example.weatherkotlin.ui.theme.WeatherTextPrimary
 import com.example.weatherkotlin.ui.theme.WeatherTextSecondary
 import com.example.weatherkotlin.ui.theme.WeatherkotlinTheme
@@ -134,7 +133,18 @@ fun WeatherCard(
 private fun WeatherCardPreview() {
     WeatherkotlinTheme {
         WeatherCard(
-            cityWeather = PreviewData.sampleCityWeather,
+            cityWeather = CityWeather(
+                id = 1,
+                cityName = "台中市",
+                country = "TW",
+                weatherDescription = "晴",
+                weatherIcon = "01d",
+                currentTemp = 27,
+                highTemp = 30,
+                lowTemp = 22,
+                lat = 24.1477,
+                lon = 120.6736
+            ),
             onClick = {}
         )
     }

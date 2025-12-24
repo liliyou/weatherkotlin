@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherkotlin.domain.model.CityWeather
-import com.example.weatherkotlin.ui.preview.PreviewData
 import com.example.weatherkotlin.ui.components.LocationPermissionHandler
 import com.example.weatherkotlin.ui.components.WeatherCard
 import com.example.weatherkotlin.ui.components.WeatherCardSkeleton
@@ -163,7 +162,32 @@ private fun HomeScreenPreview() {
     WeatherkotlinTheme {
         HomeScreenContent(
             uiState = HomeUiState(
-                cityWeatherList = PreviewData.sampleCityWeatherList,
+                cityWeatherList = listOf(
+                    CityWeather(
+                        id = 1,
+                        cityName = "台中市",
+                        country = "TW",
+                        weatherDescription = "晴",
+                        weatherIcon = "01d",
+                        currentTemp = 27,
+                        highTemp = 30,
+                        lowTemp = 22,
+                        lat = 24.1477,
+                        lon = 120.6736
+                    ),
+                    CityWeather(
+                        id = 2,
+                        cityName = "台北市",
+                        country = "TW",
+                        weatherDescription = "多雲",
+                        weatherIcon = "02d",
+                        currentTemp = 25,
+                        highTemp = 28,
+                        lowTemp = 20,
+                        lat = 25.0330,
+                        lon = 121.5654
+                    )
+                ),
                 isLoading = false,
                 hasLocationPermission = true,
                 locationPermissionRequested = true
