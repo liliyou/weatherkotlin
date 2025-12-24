@@ -7,6 +7,5 @@ data class AddedCityInfo(
     val id: Long,
     val lat: Double,
     val lon: Double,
-    val cityName: String,
-    val isNew: Boolean
+    val cityName: String
 )

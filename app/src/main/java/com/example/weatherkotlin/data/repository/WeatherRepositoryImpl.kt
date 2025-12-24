@@ -55,18 +55,12 @@ class WeatherRepositoryImpl @Inject constructor(
         return if (existing == null) {
             val entity = response.toEntity(cityName, newPosition)
             val id = cityWeatherDao.insertCityWeather(entity)
-            AddCityResult(
-                cityWeather = entity.copy(id = id).toDomainModel(),
-                isNew = true
-            )
+            AddCityResult(cityWeather = entity.copy(id = id).toDomainModel())
         } else {
             // 城市已存在，更新資料並移到最上方
             val updatedEntity = response.toEntity(existing.cityName, newPosition).copy(id = existing.id)
             cityWeatherDao.updateCityWeather(updatedEntity)
-            AddCityResult(
-                cityWeather = updatedEntity.toDomainModel(),
-                isNew = false
-            )
+            AddCityResult(cityWeather = updatedEntity.toDomainModel())
         }
     }
 

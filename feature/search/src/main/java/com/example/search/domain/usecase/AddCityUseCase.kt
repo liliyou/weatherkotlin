@@ -13,9 +13,7 @@ class AddCityUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(lat: Double, lon: Double, cityName: String): AddedCityInfo {
         val result = repository.addCity(lat, lon, cityName)
-        if (result.isNew) {
-            repository.addSuggestedCity(cityName)
-        }
+        repository.addSuggestedCity(cityName)
         return result
     }
 }

@@ -40,8 +40,7 @@ class SearchRepositoryImpl @Inject constructor(
             id = result.cityWeather.id,
             lat = result.cityWeather.lat,
             lon = result.cityWeather.lon,
-            cityName = result.cityWeather.cityName,
-            isNew = result.isNew
+            cityName = result.cityWeather.cityName
         )
     }
 

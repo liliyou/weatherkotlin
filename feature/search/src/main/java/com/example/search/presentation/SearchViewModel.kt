@@ -79,9 +79,7 @@ class SearchViewModel @Inject constructor(
                     lon = searchResult.lon,
                     cityName = cityName
                 )
-                if (result.isNew) {
-                    loadSuggestedCities()
-                }
+                loadSuggestedCities()
                 _uiState.value = _uiState.value.copy(addedCity = result)
             } catch (_: Exception) {
                 // 新增失敗時不做處理
