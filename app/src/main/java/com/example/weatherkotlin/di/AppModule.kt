@@ -21,11 +21,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import com.example.weatherkotlin.data.remote.ApiKeyInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -58,6 +58,7 @@ object AppModule {
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
+            .addInterceptor(ApiKeyInterceptor(BuildConfig.OPENWEATHER_API_KEY))
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
                     level = if (BuildConfig.DEBUG) {
@@ -103,12 +104,5 @@ object AppModule {
     @Singleton
     fun provideSearchHistoryDao(database: WeatherDatabase): SearchHistoryDao {
         return database.searchHistoryDao()
-    }
-
-    @Provides
-    @Singleton
-    @Named("apiKey")
-    fun provideApiKey(): String {
-        return BuildConfig.OPENWEATHER_API_KEY
     }
 }

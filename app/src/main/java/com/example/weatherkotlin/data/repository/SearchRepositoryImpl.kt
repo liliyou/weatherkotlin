@@ -6,19 +6,17 @@ import com.example.search.domain.repository.SearchRepository
 import com.example.weatherkotlin.data.remote.WeatherApi
 import com.example.weatherkotlin.domain.repository.WeatherRepository
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
 class SearchRepositoryImpl @Inject constructor(
     private val weatherApi: WeatherApi,
-    @Named("apiKey") private val apiKey: String,
     private val weatherRepository: WeatherRepository,
     private val searchHistoryRepository: SearchHistoryRepository
 ) : SearchRepository {
 
     override suspend fun searchCity(query: String): List<SearchResult> {
-        val results = weatherApi.searchCity(query = query, apiKey = apiKey)
+        val results = weatherApi.searchCity(query = query)
         return results.map { geo ->
             val zhName = geo.localNames?.get("zh")
             val displayName = buildString {

@@ -17,15 +17,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 import kotlin.math.roundToInt
 
 @Singleton
 class WeatherRepositoryImpl @Inject constructor(
     private val weatherApi: WeatherApi,
-    private val cityWeatherDao: CityWeatherDao,
-    @Named("apiKey") private val apiKey: String
+    private val cityWeatherDao: CityWeatherDao
 ) : WeatherRepository {
 
     override fun getAllCityWeather(): Flow<List<CityWeather>> {
@@ -39,7 +37,7 @@ class WeatherRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchAndSaveWeather(lat: Double, lon: Double, cityName: String?): CityWeather {
-        val response = weatherApi.getWeather(lat = lat, lon = lon, apiKey = apiKey)
+        val response = weatherApi.getWeather(lat = lat, lon = lon)
         val entity = response.toEntity(cityName)
         val id = cityWeatherDao.insertCityWeather(entity)
         return entity.copy(id = id).toDomainModel()
@@ -50,7 +48,7 @@ class WeatherRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addCityIfNotExists(lat: Double, lon: Double, cityName: String?): AddCityResult {
-        val response = weatherApi.getWeather(lat = lat, lon = lon, apiKey = apiKey)
+        val response = weatherApi.getWeather(lat = lat, lon = lon)
         val existing = cityWeatherDao.getCityByApiId(response.id)
         return if (existing == null) {
             val entity = response.toEntity(cityName)
@@ -71,7 +69,7 @@ class WeatherRepositoryImpl @Inject constructor(
     }
 
     override suspend fun refreshWeather(cityWeather: CityWeather): CityWeather {
-        val response = weatherApi.getWeather(lat = cityWeather.lat, lon = cityWeather.lon, apiKey = apiKey)
+        val response = weatherApi.getWeather(lat = cityWeather.lat, lon = cityWeather.lon)
         val entity = response.toEntity(cityWeather.cityName).copy(id = cityWeather.id)
         cityWeatherDao.updateCityWeather(entity)
         return entity.toDomainModel()
@@ -81,7 +79,7 @@ class WeatherRepositoryImpl @Inject constructor(
         val entities = cityWeatherDao.getAllCityWeather().first()
         return entities.map { entity ->
             try {
-                val response = weatherApi.getWeather(lat = entity.lat, lon = entity.lon, apiKey = apiKey)
+                val response = weatherApi.getWeather(lat = entity.lat, lon = entity.lon)
                 val updatedEntity = response.toEntity(entity.cityName).copy(id = entity.id)
                 cityWeatherDao.updateCityWeather(updatedEntity)
                 updatedEntity.toDomainModel()
@@ -96,7 +94,7 @@ class WeatherRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getForecast(lat: Double, lon: Double): ForecastResult {
-        val response = weatherApi.getForecast(lat = lat, lon = lon, apiKey = apiKey)
+        val response = weatherApi.getForecast(lat = lat, lon = lon)
         return response.toForecastResult()
     }
 
