@@ -7,7 +7,7 @@ A weather forecast app built with Kotlin + Jetpack Compose, following Clean Arch
 - Auto-detect current location weather (requires location permission)
 - Default city (Taipei) when location permission denied
 - Search and add cities to tracking list (prevents duplicates)
-- Quick-add suggested cities (Kaohsiung, Taoyuan, Taichung, Hsinchu)
+- Quick-add suggested cities (Tokyo, London, New York, Sydney)
 - Display current weather (temperature, condition, high/low temp)
 - View detailed forecast (hourly weather, 5-day forecast)
 - Pull-to-refresh with skeleton loading animation
@@ -188,11 +188,15 @@ feature/search/                      # Search Feature Module
    ./gradlew assembleDebug
    ```
 
+## Demo
+
+📹 [Watch Demo Video](screen_shot/Screen_recording_20251224_164555.webm)
+
 ## Screenshots
 
 | Home | Detail | Search |
 |------|--------|--------|
-| ![Home](goal/home_default.png) | ![Detail](goal/day.png) | ![Search](goal/wording_search.png) |
+| ![Home](screen_shot/Screenshot_20251224_163848.png) | ![Detail](screen_shot/Screenshot_20251224_164138.png) | ![Search](screen_shot/Screenshot_20251224_164041.png) |
 | City weather cards + Pull-to-refresh | Hourly + 5-day forecast + Delete | Suggested cities + Search results |
 
 ## AI Tools

@@ -41,4 +41,4 @@
 1. RapidAPI     → Validate API, understand data structure
 2. Figma        → Design UI mockups, save to /goal folder
 3. Claude Code  → Implement features with Clean Architecture
-```
+``` 
