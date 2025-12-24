@@ -8,7 +8,6 @@ import com.example.weatherkotlin.domain.repository.WeatherRepository
 import com.example.weatherkotlin.domain.usecase.city.DeleteCityWeatherUseCase
 import com.example.weatherkotlin.domain.usecase.weather.GetForecastUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -61,12 +60,8 @@ class DetailViewModel @Inject constructor(
                 canDelete = cityId > 0
             )
             try {
-                // 平行取得當前天氣和預報
-                val currentWeatherDeferred = async { weatherRepository.getCityWeatherById(cityId) }
-                val forecastDeferred = async { getForecastUseCase(lat = lat, lon = lon) }
-
-                val currentWeather = currentWeatherDeferred.await()
-                val forecast = forecastDeferred.await()
+                val currentWeather = weatherRepository.getCityWeatherById(cityId)
+                val forecast = getForecastUseCase(lat = lat, lon = lon)
 
                 _uiState.value = _uiState.value.copy(
                     currentWeatherIcon = currentWeather?.weatherIcon ?: "01d",
@@ -75,7 +70,7 @@ class DetailViewModel @Inject constructor(
                     dailyWeather = forecast.dailyWeather
                 )
             } catch (_: Exception) {
-                // 載入失敗時不做處理
+                _errorMessage.emit("載入天氣失敗")
             }
         }
     }
