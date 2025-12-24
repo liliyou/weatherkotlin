@@ -30,7 +30,6 @@ import com.example.search.presentation.theme.SearchTextPrimary
 fun SearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
-    onSearch: () -> Unit,
     modifier: Modifier = Modifier,
     placeholder: String = "輸入完整城市名（如：台北市）",
     readOnly: Boolean = false,
@@ -88,7 +87,6 @@ private fun SearchBarPreview() {
     SearchBar(
         query = "",
         onQueryChange = {},
-        onSearch = {},
         modifier = Modifier.padding(16.dp)
     )
 }
@@ -99,7 +97,6 @@ private fun SearchBarWithTextPreview() {
     SearchBar(
         query = "台北",
         onQueryChange = {},
-        onSearch = {},
         modifier = Modifier.padding(16.dp)
     )
 }

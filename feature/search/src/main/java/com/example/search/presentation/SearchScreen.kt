@@ -73,7 +73,6 @@ fun SearchScreen(
             SearchBar(
                 query = query,
                 onQueryChange = onQueryChange,
-                onSearch = onSearch,
                 modifier = Modifier.weight(1f)
             )
         }
