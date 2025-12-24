@@ -9,8 +9,11 @@ import com.example.weatherkotlin.domain.usecase.city.DeleteCityWeatherUseCase
 import com.example.weatherkotlin.domain.usecase.weather.GetForecastUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,6 +38,9 @@ class DetailViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(DetailUiState())
     val uiState: StateFlow<DetailUiState> = _uiState.asStateFlow()
+
+    private val _errorMessage = MutableSharedFlow<String>()
+    val errorMessage: SharedFlow<String> = _errorMessage.asSharedFlow()
 
     private var currentCityId: Long = -1
     private var currentLat: Double = 0.0
@@ -95,6 +101,7 @@ class DetailViewModel @Inject constructor(
                 )
             } catch (_: Exception) {
                 _uiState.value = _uiState.value.copy(isRefreshing = false)
+                _errorMessage.emit("更新天氣失敗")
             }
         }
     }
@@ -107,7 +114,7 @@ class DetailViewModel @Inject constructor(
                 deleteCityWeatherUseCase(currentCityId)
                 _uiState.value = _uiState.value.copy(isDeleted = true)
             } catch (_: Exception) {
-                // 刪除失敗時不做處理
+                _errorMessage.emit("刪除城市失敗")
             }
         }
     }

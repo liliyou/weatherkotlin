@@ -9,8 +9,11 @@ import com.example.search.domain.usecase.SearchCitiesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,6 +31,9 @@ class SearchViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
+
+    private val _errorMessage = MutableSharedFlow<String>()
+    val errorMessage: SharedFlow<String> = _errorMessage.asSharedFlow()
 
     private var searchJob: Job? = null
 
@@ -60,8 +66,8 @@ class SearchViewModel @Inject constructor(
             val results = searchCitiesUseCase(query)
             _uiState.value = _uiState.value.copy(searchResults = results)
         } catch (_: Exception) {
-            // 搜尋失敗時清空結果
             _uiState.value = _uiState.value.copy(searchResults = emptyList())
+            _errorMessage.emit("搜尋失敗")
         }
     }
 
@@ -86,7 +92,7 @@ class SearchViewModel @Inject constructor(
                 loadSuggestedCities()
                 _uiState.value = _uiState.value.copy(addedCity = result)
             } catch (_: Exception) {
-                // 新增失敗時不做處理
+                _errorMessage.emit("新增城市失敗")
             }
         }
     }

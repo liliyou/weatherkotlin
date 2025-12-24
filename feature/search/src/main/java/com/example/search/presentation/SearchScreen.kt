@@ -19,9 +19,16 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import kotlinx.coroutines.flow.SharedFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,13 +52,33 @@ fun SearchScreen(
     onResultClick: (SearchResult) -> Unit,
     onSuggestedClick: (String) -> Unit,
     onClose: () -> Unit,
+    errorMessage: SharedFlow<String>?,
     modifier: Modifier = Modifier
 ) {
-    Column(
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    errorMessage?.let { flow ->
+        LaunchedEffect(Unit) {
+            flow.collect { message ->
+                snackbarHostState.showSnackbar(message)
+            }
+        }
+    }
+
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(snackbarHostState) { data ->
+                Snackbar(snackbarData = data)
+            }
+        },
+        containerColor = SearchBackground,
         modifier = modifier
-            .fillMaxSize()
-            .background(SearchBackground)
-    ) {
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
         // 返回按鈕 + 搜尋框
         Row(
             modifier = Modifier
@@ -108,6 +135,7 @@ fun SearchScreen(
                 }
             }
         }
+        }
     }
 }
 
@@ -162,7 +190,8 @@ private fun SearchScreenPreview() {
         suggestedCities = listOf("桃園市", "高雄市", "台中市", "新竹市"),
         onResultClick = {},
         onSuggestedClick = {},
-        onClose = {}
+        onClose = {},
+        errorMessage = null
     )
 }
 
@@ -177,6 +206,7 @@ private fun SearchScreenEmptyPreview() {
         suggestedCities = listOf("桃園市", "高雄市", "台中市", "新竹市"),
         onResultClick = {},
         onSuggestedClick = {},
-        onClose = {}
+        onClose = {},
+        errorMessage = null
     )
 }

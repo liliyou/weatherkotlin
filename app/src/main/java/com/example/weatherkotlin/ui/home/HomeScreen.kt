@@ -20,10 +20,17 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import kotlinx.coroutines.flow.SharedFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,18 +50,28 @@ import com.example.weatherkotlin.ui.theme.WeatherkotlinTheme
 @Composable
 fun HomeScreen(
     uiState: HomeUiState,
+    errorMessage: SharedFlow<String>,
     onSearchClick: () -> Unit,
     onCityClick: (CityWeather) -> Unit,
     onPermissionResult: (Boolean) -> Unit,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        errorMessage.collect { message ->
+            snackbarHostState.showSnackbar(message)
+        }
+    }
+
     LocationPermissionHandler(
         shouldRequest = !uiState.locationPermissionRequested,
         onResult = onPermissionResult
     ) {
         HomeScreenContent(
             uiState = uiState,
+            snackbarHostState = snackbarHostState,
             onSearchClick = onSearchClick,
             onCityClick = onCityClick,
             onRefresh = onRefresh,
@@ -70,13 +87,23 @@ private fun HomeScreenContent(
     onSearchClick: () -> Unit,
     onCityClick: (CityWeather) -> Unit,
     onRefresh: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) {
-    Column(
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(snackbarHostState) { data ->
+                Snackbar(snackbarData = data)
+            }
+        },
+        containerColor = WeatherBackground,
         modifier = modifier
-            .fillMaxSize()
-            .background(WeatherBackground)
-    ) {
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
         // 標題列：天氣 + 搜尋按鈕
         Row(
             modifier = Modifier
@@ -152,6 +179,7 @@ private fun HomeScreenContent(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
+        }
         }
     }
 }

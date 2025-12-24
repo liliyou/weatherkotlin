@@ -9,8 +9,11 @@ import com.example.weatherkotlin.domain.usecase.city.InitializeDefaultCityUseCas
 import com.example.weatherkotlin.domain.usecase.weather.GetAllCityWeatherUseCase
 import com.example.weatherkotlin.domain.usecase.weather.RefreshAllWeatherUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
@@ -35,6 +38,9 @@ class HomeViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+
+    private val _errorMessage = MutableSharedFlow<String>()
+    val errorMessage: SharedFlow<String> = _errorMessage.asSharedFlow()
 
     init {
         loadInitialWeather()
@@ -109,7 +115,7 @@ class HomeViewModel @Inject constructor(
             try {
                 refreshAllWeatherUseCase()
             } catch (_: Exception) {
-                // 刷新失敗時不做處理
+                _errorMessage.emit("更新天氣失敗")
             } finally {
                 _uiState.value = _uiState.value.copy(isRefreshing = false)
             }

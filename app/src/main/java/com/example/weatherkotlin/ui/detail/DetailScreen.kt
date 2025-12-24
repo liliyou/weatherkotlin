@@ -17,9 +17,16 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import kotlinx.coroutines.flow.SharedFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -40,21 +47,41 @@ import com.example.weatherkotlin.ui.theme.WeatherkotlinTheme
 @Composable
 fun DetailScreen(
     uiState: DetailUiState,
+    errorMessage: SharedFlow<String>?,
     onBackClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    PullToRefreshBox(
-        isRefreshing = uiState.isRefreshing,
-        onRefresh = onRefresh,
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    errorMessage?.let { flow ->
+        LaunchedEffect(Unit) {
+            flow.collect { message ->
+                snackbarHostState.showSnackbar(message)
+            }
+        }
+    }
+
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(snackbarHostState) { data ->
+                Snackbar(snackbarData = data)
+            }
+        },
+        containerColor = WeatherBackground,
         modifier = modifier
-            .fillMaxSize()
-            .background(WeatherBackground)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
+    ) { paddingValues ->
+        PullToRefreshBox(
+            isRefreshing = uiState.isRefreshing,
+            onRefresh = onRefresh,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
         ) {
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
             // 頂部導航列
             Box(
                 modifier = Modifier
@@ -136,6 +163,7 @@ fun DetailScreen(
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
+        }
     }
 }
 
@@ -167,6 +195,7 @@ private fun DetailScreenPreview() {
                 ),
                 canDelete = true
             ),
+            errorMessage = null,
             onBackClick = {},
             onDeleteClick = {},
             onRefresh = {}

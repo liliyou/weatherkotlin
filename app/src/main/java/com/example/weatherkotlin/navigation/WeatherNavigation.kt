@@ -42,6 +42,7 @@ fun WeatherNavigation(
 
             HomeScreen(
                 uiState = uiState,
+                errorMessage = viewModel.errorMessage,
                 onSearchClick = {
                     navController.navigate(Screen.Search.route)
                 },
@@ -92,6 +93,7 @@ fun WeatherNavigation(
 
             DetailScreen(
                 uiState = uiState,
+                errorMessage = viewModel.errorMessage,
                 onBackClick = { navController.popBackStack() },
                 onDeleteClick = { viewModel.deleteCity() },
                 onRefresh = { viewModel.refresh() }
@@ -126,7 +128,8 @@ fun WeatherNavigation(
                 suggestedCities = uiState.suggestedCities,
                 onResultClick = { viewModel.addCity(it) },
                 onSuggestedClick = viewModel::onSuggestedCityClick,
-                onClose = { navController.popBackStack() }
+                onClose = { navController.popBackStack() },
+                errorMessage = viewModel.errorMessage
             )
         }
     }
