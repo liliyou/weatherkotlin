@@ -8,6 +8,7 @@ import com.example.weatherkotlin.domain.model.CityWeather
 data class CityWeatherEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
+    val apiCityId: Long = 0,
     val cityName: String,
     val country: String = "",
     val weatherDescription: String,
@@ -26,6 +27,7 @@ data class CityWeatherEntity(
 fun CityWeatherEntity.toDomainModel(): CityWeather {
     return CityWeather(
         id = id,
+        apiCityId = apiCityId,
         cityName = cityName,
         country = country,
         weatherDescription = weatherDescription,

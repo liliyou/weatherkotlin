@@ -5,6 +5,7 @@ package com.example.weatherkotlin.domain.model
  */
 data class CityWeather(
     val id: Long,
+    val apiCityId: Long = 0,
     val cityName: String,
     val country: String = "",
     val weatherDescription: String,

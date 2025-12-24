@@ -3,6 +3,7 @@ package com.example.weatherkotlin.data.remote.dto
 import com.google.gson.annotations.SerializedName
 
 data class WeatherResponse(
+    @SerializedName("id") val id: Long,
     @SerializedName("coord") val coord: Coord,
     @SerializedName("weather") val weather: List<Weather>,
     @SerializedName("main") val main: Main,
