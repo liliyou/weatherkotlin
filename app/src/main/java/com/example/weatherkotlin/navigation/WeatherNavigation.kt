@@ -90,12 +90,10 @@ fun WeatherNavigation(
             }
 
             DetailScreen(
-                cityName = uiState.cityName,
-                hourlyWeather = uiState.hourlyWeather,
-                dailyWeather = uiState.dailyWeather,
-                canDelete = uiState.canDelete,
+                uiState = uiState,
                 onBackClick = { navController.popBackStack() },
-                onDeleteClick = { viewModel.deleteCity() }
+                onDeleteClick = { viewModel.deleteCity() },
+                onRefresh = { viewModel.refresh() }
             )
         }
 

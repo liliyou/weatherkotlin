@@ -15,6 +15,11 @@ interface WeatherRepository {
     fun getAllCityWeather(): Flow<List<CityWeather>>
 
     /**
+     * 依 ID 取得單一城市天氣
+     */
+    suspend fun getCityWeatherById(id: Long): CityWeather?
+
+    /**
      * 取得並儲存天氣資料
      */
     suspend fun fetchAndSaveWeather(lat: Double, lon: Double, cityName: String? = null): CityWeather
