@@ -13,6 +13,7 @@ class AddCurrentLocationCityUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(): Boolean {
         val location = locationRepository.getCurrentLocation() ?: return false
-        return weatherRepository.addCityIfNotExists(location.lat, location.lon)
+        val result = weatherRepository.addCityIfNotExists(location.lat, location.lon)
+        return result.isNew
     }
 }

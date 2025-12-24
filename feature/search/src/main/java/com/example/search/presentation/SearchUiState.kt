@@ -1,5 +1,6 @@
 package com.example.search.presentation
 
+import com.example.search.domain.model.AddedCityInfo
 import com.example.search.domain.model.SearchResult
 
 /**
@@ -10,7 +11,6 @@ data class SearchUiState(
     val searchResults: List<SearchResult> = emptyList(),
     val suggestedCities: List<String> = emptyList(),
     val isLoading: Boolean = false,
-    val isAdded: Boolean = false,
-    val alreadyExists: Boolean = false,
+    val addedCity: AddedCityInfo? = null,
     val error: String? = null
 )

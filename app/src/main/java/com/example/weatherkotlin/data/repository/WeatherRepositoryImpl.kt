@@ -7,6 +7,7 @@ import com.example.weatherkotlin.data.remote.WeatherApi
 import com.example.weatherkotlin.data.remote.dto.ForecastResponse
 import com.example.weatherkotlin.data.remote.dto.WeatherResponse
 import com.example.weatherkotlin.data.util.DateTimeFormatter
+import com.example.weatherkotlin.domain.model.AddCityResult
 import com.example.weatherkotlin.domain.model.CityWeather
 import com.example.weatherkotlin.domain.model.DailyWeather
 import com.example.weatherkotlin.domain.model.ForecastResult
@@ -48,18 +49,24 @@ class WeatherRepositoryImpl @Inject constructor(
         return cityWeatherDao.getCityByApiId(apiCityId) != null
     }
 
-    override suspend fun addCityIfNotExists(lat: Double, lon: Double, cityName: String?): Boolean {
+    override suspend fun addCityIfNotExists(lat: Double, lon: Double, cityName: String?): AddCityResult {
         val response = weatherApi.getWeather(lat = lat, lon = lon, apiKey = apiKey)
         val existing = cityWeatherDao.getCityByApiId(response.id)
         return if (existing == null) {
             val entity = response.toEntity(cityName)
-            cityWeatherDao.insertCityWeather(entity)
-            true
+            val id = cityWeatherDao.insertCityWeather(entity)
+            AddCityResult(
+                cityWeather = entity.copy(id = id).toDomainModel(),
+                isNew = true
+            )
         } else {
             // 城市已存在，更新資料並移到最上方
             val updatedEntity = response.toEntity(existing.cityName).copy(id = existing.id)
             cityWeatherDao.updateCityWeather(updatedEntity)
-            false
+            AddCityResult(
+                cityWeather = updatedEntity.toDomainModel(),
+                isNew = false
+            )
         }
     }
 

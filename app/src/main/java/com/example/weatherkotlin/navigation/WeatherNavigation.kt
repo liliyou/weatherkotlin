@@ -101,17 +101,19 @@ fun WeatherNavigation(
             val viewModel: SearchViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-            LaunchedEffect(uiState.isAdded) {
-                if (uiState.isAdded) {
-                    viewModel.resetAddedState()
-                    navController.popBackStack()
-                }
-            }
-
-            LaunchedEffect(uiState.alreadyExists) {
-                if (uiState.alreadyExists) {
-                    viewModel.resetAlreadyExistsState()
-                    navController.popBackStack()
+            LaunchedEffect(uiState.addedCity) {
+                uiState.addedCity?.let { city ->
+                    viewModel.resetAddedCity()
+                    // 清除 Search 頁面，讓 Detail 返回時直接回到 Home
+                    navController.popBackStack(Screen.Home.route, inclusive = false)
+                    navController.navigate(
+                        Screen.Detail.createRoute(
+                            lat = city.lat,
+                            lon = city.lon,
+                            cityName = city.cityName,
+                            cityId = city.id
+                        )
+                    )
                 }
             }
 

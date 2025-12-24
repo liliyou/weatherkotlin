@@ -1,5 +1,6 @@
 package com.example.weatherkotlin.data.repository
 
+import com.example.search.domain.model.AddedCityInfo
 import com.example.search.domain.model.SearchResult
 import com.example.search.domain.repository.SearchRepository
 import com.example.weatherkotlin.data.remote.WeatherApi
@@ -35,8 +36,15 @@ class SearchRepositoryImpl @Inject constructor(
         }.distinctBy { "${it.lat},${it.lon}" }
     }
 
-    override suspend fun addCity(lat: Double, lon: Double, cityName: String): Boolean {
-        return weatherRepository.addCityIfNotExists(lat, lon, cityName)
+    override suspend fun addCity(lat: Double, lon: Double, cityName: String): AddedCityInfo {
+        val result = weatherRepository.addCityIfNotExists(lat, lon, cityName)
+        return AddedCityInfo(
+            id = result.cityWeather.id,
+            lat = result.cityWeather.lat,
+            lon = result.cityWeather.lon,
+            cityName = result.cityWeather.cityName,
+            isNew = result.isNew
+        )
     }
 
     override suspend fun getSuggestedCities(): List<String> {

@@ -1,5 +1,6 @@
 package com.example.search.domain.repository
 
+import com.example.search.domain.model.AddedCityInfo
 import com.example.search.domain.model.SearchResult
 
 /**
@@ -14,9 +15,9 @@ interface SearchRepository {
 
     /**
      * 新增城市到收藏
-     * @return true 如果成功新增，false 如果城市已存在
+     * @return 城市資訊（包含 ID 用於導航）
      */
-    suspend fun addCity(lat: Double, lon: Double, cityName: String): Boolean
+    suspend fun addCity(lat: Double, lon: Double, cityName: String): AddedCityInfo
 
     /**
      * 取得建議城市列表

@@ -1,5 +1,6 @@
 package com.example.weatherkotlin.domain.repository
 
+import com.example.weatherkotlin.domain.model.AddCityResult
 import com.example.weatherkotlin.domain.model.CityWeather
 import com.example.weatherkotlin.domain.model.ForecastResult
 import kotlinx.coroutines.flow.Flow
@@ -30,10 +31,10 @@ interface WeatherRepository {
     suspend fun isCityExists(apiCityId: Long): Boolean
 
     /**
-     * 若城市不存在則新增
-     * @return true 如果新增了城市，false 如果已存在
+     * 新增城市（若已存在則更新）
+     * @return 城市資訊與是否為新增
      */
-    suspend fun addCityIfNotExists(lat: Double, lon: Double, cityName: String? = null): Boolean
+    suspend fun addCityIfNotExists(lat: Double, lon: Double, cityName: String? = null): AddCityResult
 
     /**
      * 刷新單一城市天氣
