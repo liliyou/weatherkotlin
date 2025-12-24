@@ -31,7 +31,7 @@ import com.example.weatherkotlin.ui.theme.WeatherCardBackground
 import com.example.weatherkotlin.ui.theme.WeatherTextPrimary
 import com.example.weatherkotlin.ui.theme.WeatherTextSecondary
 import com.example.weatherkotlin.ui.theme.WeatherkotlinTheme
-import com.example.weatherkotlin.ui.theme.weatherCardStyle
+import com.example.weatherkotlin.ui.util.weatherCardStyle
 
 @Composable
 fun HourlyWeatherRow(

@@ -1,4 +1,7 @@
-package com.example.weatherkotlin.ui.theme
+package com.example.weatherkotlin.ui.util
+
+import com.example.weatherkotlin.ui.theme.WeatherCardBackground
+import com.example.weatherkotlin.ui.theme.WeatherCardBackgroundLight
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape

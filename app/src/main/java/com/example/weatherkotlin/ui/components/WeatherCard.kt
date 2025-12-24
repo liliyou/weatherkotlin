@@ -39,7 +39,7 @@ import com.example.weatherkotlin.ui.util.WeatherIconUrl
 import com.example.weatherkotlin.ui.theme.WeatherTextPrimary
 import com.example.weatherkotlin.ui.theme.WeatherTextSecondary
 import com.example.weatherkotlin.ui.theme.WeatherkotlinTheme
-import com.example.weatherkotlin.ui.theme.weatherCardStyle
+import com.example.weatherkotlin.ui.util.weatherCardStyle
 
 private val ICON_SIZE = 110.dp
 private val CARD_TOP_PADDING = 50.dp

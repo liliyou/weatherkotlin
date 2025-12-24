@@ -92,9 +92,9 @@ app/src/main/java/com/example/weatherkotlin/
     ├── theme/
     │   ├── Theme.kt
     │   ├── Color.kt
-    │   ├── Type.kt
-    │   └── CardModifiers.kt
+    │   └── Type.kt
     ├── util/
+    │   ├── CardModifiers.kt
     │   └── WeatherIconUrl.kt
     ├── components/
     │   ├── WeatherCard.kt
