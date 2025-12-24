@@ -196,8 +196,13 @@ feature/search/                      # Search Feature Module
 
 | Home | Detail | Search |
 |------|--------|--------|
-| ![Home](screen_shot/Screenshot_20251224_163848.png) | ![Detail](screen_shot/Screenshot_20251224_164138.png) | ![Search](screen_shot/Screenshot_20251224_164041.png) |
+| ![Home](screen_shot/home.png) | ![Detail](screen_shot/detail.png) | ![Search](screen_shot/search.png) |
 | City weather cards + Pull-to-refresh | Hourly + 5-day forecast + Delete | Suggested cities + Search results |
+
+| GPS Permission | Quick Select |
+|----------------|--------------|
+| ![GPS](screen_shot/gps.png) | ![Quick Select](screen_shot/quick_select.png) |
+| Location permission request | Quick-add suggested cities |
 
 ## AI Tools
 
